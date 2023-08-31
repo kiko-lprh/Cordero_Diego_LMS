@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.io.*;
+import java.util.Iterator;
 
 
 public class Library {
@@ -9,7 +10,7 @@ public class Library {
     }
 
 
-    ArrayList<Book> bookCollection = new ArrayList<Book>();
+    ArrayList<Book> bookCollection = new ArrayList<>();
 
 
     public void addBook(String ID,String title, String author) {
@@ -18,33 +19,41 @@ public class Library {
 
 
     public void removeBook(int ID){
+        Iterator<Book> iterator = bookCollection.iterator();
 
+        while (iterator.hasNext()) {
+            Book book = iterator.next();
+            if (book.getID() == ID) {
+                iterator.remove();
+                System.out.println("Book successfully removed.");
+                return;
+            }
+        }
+        System.out.println("Book not found.");
     }
 
 
     public void printCollection() {
 
         System.out.println();
-        for (int i = 0; i < bookCollection.size(); i++){
-            System.out.println(bookCollection.get(i).toString());
+        for (Book book : bookCollection) {
+            System.out.println(book.toString());
         }
 
     }
 
-    public void openFile (String filePath) { //Change to STRING later
+    public void openFile (String filePath) {
         try {
             BufferedReader read = new BufferedReader(new FileReader(filePath));
             String line;
 
 
             while ((line = read.readLine()) != null) {
-                String tempArray[] = line.split(",");
+                String[] tempArray = line.split(",");
                 addBook(tempArray[0], tempArray[1], tempArray[2]);
             }
 
-
             read.close();
-
 
         } catch (IOException e) {
             // e.printStackTrace();

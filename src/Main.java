@@ -31,24 +31,11 @@ public class Main {
     public static void menuSwitch (String choice, Scanner scan) {
 
         switch (choice) {
-            case "a":
-            case "A":
-                bookstore.openFile(getPath(scan));
-                break;
-
-
-            case "d":
-            case "D":
-                break;
-
-
-            case "p":
-            case "P":
-                bookstore.printCollection();
-                break;
-
-            default:
-                break;
+            case "a", "A" -> bookstore.openFile(getPath(scan));
+            case "d", "D" -> bookstore.removeBook(getID(scan));
+            case "p", "P" -> bookstore.printCollection();
+            default -> {
+            }
         }
     }
 
@@ -63,6 +50,12 @@ public class Main {
         return path;
     }
 
+    public static int getID(Scanner scan){
+        System.out.print("Enter the Book's ID: ");
+        int ID = scan.nextInt();
+        System.out.println();
+        return ID;
+    }
 
 }
 
