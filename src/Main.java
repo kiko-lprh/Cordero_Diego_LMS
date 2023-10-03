@@ -30,7 +30,8 @@ public class Main {
         do {
 
             System.out.println("\n(A)dd books from file.");
-            System.out.println("(D)elete book.");
+            System.out.println("Delete book by (B)arcode #.");
+            System.out.println("Delete book by (T)itle.");
             System.out.println("(P)rint book collection.");
             System.out.println("(Q)uit.\n");
             System.out.print("Choice: ");
@@ -51,10 +52,11 @@ public class Main {
      */
     public static void menuSwitch (String choice, Scanner scan) {
 
-        switch (choice) {
-            case "a", "A" -> bookstore.openFile(getPath(scan));
-            case "d", "D" -> bookstore.removeBook(getID(scan));
-            case "p", "P" -> bookstore.printCollection();
+        switch (choice.toLowerCase()) {
+            case "a" -> bookstore.openFile(getPath(scan));
+            case "b" -> bookstore.removeBook(getBarcode(scan));
+            case "p" -> bookstore.printCollection();
+            case "t" -> bookstore.removeBook(getTitle(scan));
             default -> {
             }
         }
@@ -70,7 +72,7 @@ public class Main {
     public static String getPath(Scanner scan){
 
 
-        System.out.print("Enter desired filepath: ");
+        System.out.print("Enter filepath: ");
         String path = scan.nextLine();
         System.out.println();
 
@@ -79,17 +81,29 @@ public class Main {
 
 
     /**
-     * method: getID()
+     * method: getBarcode()
      * parameters: Scanner scan
      * return: int
-     * purpose: Get the ID of the book that is going to be deleted from the user.
+     * purpose: Get the barcode of the book that is going to be deleted from the user.
      */
-    public static int getID(Scanner scan){
-        System.out.print("Enter the Book's ID: ");
-        int ID = scan.nextInt();
+    public static int getBarcode(Scanner scan){
+        System.out.print("Enter the Book's Barcode #: ");
+        int barcode = scan.nextInt();
         System.out.println();
-        return ID;
+        return barcode;
     }
 
+    /**
+     * method: getTitle()
+     * parameters: Scanner scan
+     * return: String
+     * purpose: Get the title of the book that is going to be deleted from the user.
+     */
+    public static String getTitle(Scanner scan){
+        System.out.print("Enter the Book's Title #: ");
+        String title = scan.nextLine();
+        System.out.println();
+        return title;
+    }
 
 }

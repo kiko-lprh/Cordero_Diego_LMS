@@ -23,33 +23,60 @@ public class Library {
 
     /**
      * method: addBook()
-     * parameters: String ID, String title, String author
+     * parameters: String barcode, String title, String author
      * return: n/a
      * purpose: Adds a book to the collection.
      */
-    public void addBook(String ID, String title, String author) {
-        bookCollection.add(new Book(title, author, Integer.parseInt(ID)));
+    public void addBook(String barcode, String title, String author) {
+        bookCollection.add(new Book(title, author, Integer.parseInt(barcode)));
     }
 
 
     /**
-     * method: removeBook()
-     * parameters: int ID
+     * method: removeBook(int)
+     * parameters: int barcode
      * return: n/a
-     * purpose: Removes a book from the collection using the book's ID as reference.
+     * purpose: Removes a book from the collection using the book's barcode as reference.
      */
-    public void removeBook(int ID){
+    public void removeBook(int barcode){
         Iterator<Book> iterator = bookCollection.iterator();
 
         while (iterator.hasNext()) {
             Book book = iterator.next();
-            if (book.getID() == ID) {
+            if (book.getBarcode() == barcode) {
                 iterator.remove();
                 System.out.println("Book successfully removed.");
                 return;
             }
         }
         System.out.println("Book not found.");
+    }
+
+    /**
+     * method: removeBook(String)
+     * parameters: String title
+     * return: n/a
+     * purpose: Removes all books from the collection that have the inputted title.
+     */
+    public void removeBook(String title){
+        Iterator<Book> iterator = bookCollection.iterator();
+        int booksRemoved = 0;
+
+        while (iterator.hasNext()) {
+            Book book = iterator.next();
+            if (book.getTitle().equals(title)) {
+                iterator.remove();
+                booksRemoved += 1;
+            }
+        }
+
+        if (booksRemoved > 0){
+            System.out.println(booksRemoved + "Book(s) removed.");
+        }
+        else{
+            System.out.println("Book(s) not found.");
+        }
+
     }
 
 

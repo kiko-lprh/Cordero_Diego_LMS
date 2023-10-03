@@ -11,12 +11,15 @@ public class Book {
 
     String title;
     String author;
-    int id;
+    int barcode;
+    String dueDate;
+    Boolean borrowStatus; // if true book is checked out
 
-    public Book (String title, String author, int id){
+
+    public Book (String title, String author, int barcode){
         this.title = title;
         this.author = author;
-        this.id = id;
+        this.barcode = barcode;
     }
 
 
@@ -40,13 +43,13 @@ public class Book {
     }
 
 
-    public void setID(int id) {
-        this.id = id;
+    public void setBarcode(int barcode) {
+        this.barcode = barcode;
     }
 
 
-    public int getID() {
-        return id;
+    public int getBarcode() {
+        return barcode;
     }
 
 
@@ -58,6 +61,6 @@ public class Book {
      */
     @Override
     public String toString() {
-        return "ID: " + id + ", " + "Title: " + title + ", " + "Author: " + author + ".";
+        return "Barcode #: " + barcode + ", " + "Title: " + title + ", " + "Author: " + author + ".";
     }
 }
