@@ -56,7 +56,7 @@ public class Main {
             case "a" -> bookstore.openFile(getPath(scan));
             case "b" -> bookstore.removeBook(getBarcode(scan));
             case "p" -> bookstore.printCollection();
-            case "t" -> bookstore.removeBook(getTitle(scan));
+            case "t" -> bookstore.removeBook(getTitle(scan), scan);
             default -> {
             }
         }

@@ -10,6 +10,7 @@
 import java.util.ArrayList;
 import java.io.*;
 import java.util.Iterator;
+import java.util.Scanner;
 
 
 public class Library {
@@ -20,6 +21,7 @@ public class Library {
 
 
     ArrayList<Book> bookCollection = new ArrayList<>();
+
 
     /**
      * method: addBook()
@@ -52,29 +54,50 @@ public class Library {
         System.out.println("Book not found.");
     }
 
+
     /**
      * method: removeBook(String)
      * parameters: String title
      * return: n/a
-     * purpose: Removes all books from the collection that have the inputted title.
+     * purpose: Removes books from the collection that have the inputted title, if there are multiple
+     * books with the same title, prompts the user to enter the book's barcode number to delete it.
      */
-    public void removeBook(String title){
+    public void removeBook(String title, Scanner scan){
         Iterator<Book> iterator = bookCollection.iterator();
-        int booksRemoved = 0;
+        ArrayList<Book> tempBookList = new ArrayList<>();
+        int bookCount = 0;
 
-        while (iterator.hasNext()) {
-            Book book = iterator.next();
+        for (Book book : bookCollection) {
             if (book.getTitle().equals(title)) {
-                iterator.remove();
-                booksRemoved += 1;
+                tempBookList.add(book);
+                bookCount += 1;
             }
         }
 
-        if (booksRemoved > 0){
-            System.out.println(booksRemoved + "Book(s) removed.");
+        if (bookCount == 1){
+            while (iterator.hasNext()) {
+                Book book = iterator.next();
+                if (book.getTitle().equals(title)) {
+                    iterator.remove();
+                    System.out.println("Book successfully removed.");
+                    return;
+                }
+            }
         }
-        else{
-            System.out.println("Book(s) not found.");
+        else if (bookCount > 1) {
+            System.out.println("Books found:\n");
+
+            for (Book book : tempBookList) {
+                System.out.println(book.toString());
+            }
+
+            System.out.println();
+            System.out.print("Enter the Barcode of the book you want to delete: ");
+            removeBook(scan.nextInt());
+            System.out.println();
+        }
+        else {
+            System.out.println("Book not found");
         }
 
     }
@@ -124,5 +147,3 @@ public class Library {
 
 
 }
-
-
