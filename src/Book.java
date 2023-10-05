@@ -13,7 +13,7 @@ public class Book {
     String author;
     int barcode;
     String dueDate; // Null by default
-    Boolean borrowStatus; // if true book is checked out
+    Boolean availability; // if true book is checked in
 
 
     public Book (String title, String author, int barcode){
@@ -21,7 +21,7 @@ public class Book {
         this.author = author;
         this.barcode = barcode;
         dueDate = null;
-        borrowStatus = false;
+        availability = true;
     }
 
 
@@ -65,13 +65,13 @@ public class Book {
     }
 
 
-    public void setBorrowStatus(Boolean borrowStatus) {
-        this.borrowStatus = borrowStatus;
+    public void setAvailability(Boolean availability) {
+        this.availability = availability;
     }
 
 
-    public Boolean getBorrowStatus() {
-        return borrowStatus;
+    public Boolean getAvailability() {
+        return availability;
     }
 
 
@@ -84,6 +84,6 @@ public class Book {
     @Override
     public String toString() {
         return "Barcode #: " + barcode + ", " + "Title: " + title + ", " + "Author: " + author + ", "
-                + "Due Date: " +  dueDate + ", " + "Borrow status: " + borrowStatus;
+                + "Due Date: " +  dueDate + ", " + "Available: " + availability;
     }
 }

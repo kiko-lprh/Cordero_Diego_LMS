@@ -32,6 +32,8 @@ public class Main {
             System.out.println("\n(A)dd books from file.");
             System.out.println("Delete book by (B)arcode #.");
             System.out.println("Delete book by (T)itle.");
+            System.out.println("Check book (i)n.");
+            System.out.println("Check book (o)ut.");
             System.out.println("(P)rint book collection.");
             System.out.println("(Q)uit.\n");
             System.out.print("Choice: ");
@@ -55,6 +57,8 @@ public class Main {
         switch (choice.toLowerCase()) {
             case "a" -> bookstore.openFile(getPath(scan));
             case "b" -> bookstore.removeBook(getBarcode(scan));
+            case "i" -> bookstore.checkIn(getTitle(scan), scan);
+            case "o" -> bookstore.checkOut(getTitle(scan), scan);
             case "p" -> bookstore.printCollection();
             case "t" -> bookstore.removeBook(getTitle(scan), scan);
             default -> {
@@ -93,14 +97,15 @@ public class Main {
         return barcode;
     }
 
+
     /**
      * method: getTitle()
      * parameters: Scanner scan
      * return: String
-     * purpose: Get the title of the book that is going to be deleted from the user.
+     * purpose: Get the title a book from the user.
      */
     public static String getTitle(Scanner scan){
-        System.out.print("Enter the Book's Title #: ");
+        System.out.print("Enter the Book's Title: ");
         String title = scan.nextLine();
         System.out.println();
         return title;

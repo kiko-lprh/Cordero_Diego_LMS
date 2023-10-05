@@ -146,4 +146,51 @@ public class Library {
     }
 
 
+    /**
+     * method: checkIn()
+     * parameters: String filePath
+     * return: n/a
+     * purpose: Checks a book back in after it has been checked out.
+     */
+    public void checkIn (String title, Scanner scan) {
+        if (isAvailable(title)) {
+            System.out.println("Book is already checked in");
+        }
+        else {
+            System.out.println("Continue to check in here");
+        }
+    }
+
+
+    /**
+     * method: checkOut()
+     * parameters: String filePath
+     * return: n/a
+     * purpose: Checks an available book out.
+     */
+    public void checkOut (String title, Scanner scan) {
+        if (isAvailable(title)) {
+            System.out.println("Continue to check out here");
+        }
+        else {
+            System.out.println("Book is not available");
+        }
+    }
+
+
+    public boolean isAvailable(String title){
+        int availableCount = 0;
+        for (Book book : bookCollection){
+            if (book.getTitle().equals(title) && book.getAvailability()){
+                availableCount += 1;
+            }
+        }
+
+        if (availableCount > 0) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }
