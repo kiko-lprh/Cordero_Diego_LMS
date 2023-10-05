@@ -170,7 +170,41 @@ public class Library {
      */
     public void checkOut (String title, Scanner scan) {
         if (isAvailable(title)) {
-            System.out.println("Continue to check out here");
+            ArrayList<Book> tempBookList = new ArrayList<>();
+            int count = 0;
+            for (Book book : bookCollection){
+                if (book.getTitle().equals(title) && book.getAvailability()){
+                    tempBookList.add(book);
+                    count += 1;
+                }
+            }
+
+            if (count > 1) {
+                System.out.println("Multiple books are available to be checked out under that title:");
+                for (Book book : tempBookList) {
+                    System.out.println(book.toString());
+                }
+                System.out.println();
+                System.out.print("Enter the Barcode of the book you want to check out: ");
+                int barcodeNum = scan.nextInt();
+                for (Book book : bookCollection) {
+                    if (book.getBarcode() == barcodeNum) {
+                        book.setAvailability(false);
+                    }
+                }
+                System.out.println("The book has been successfully checked out.");
+            }
+            else  {
+                System.out.println("The following book:");
+                for (Book book : bookCollection) {
+                    if (book.getTitle().equals(title)) {
+                        System.out.println(book.toString());
+                        book.setAvailability(false);
+                    }
+                }
+                System.out.println("Has been checked out.");
+            }
+
         }
         else {
             System.out.println("Book is not available");
