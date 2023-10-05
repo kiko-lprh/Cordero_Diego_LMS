@@ -153,12 +153,45 @@ public class Library {
      * purpose: Checks a book back in after it has been checked out.
      */
     public void checkIn (String title, Scanner scan) {
-        if (isAvailable(title)) {
-            System.out.println("Book is already checked in");
+        int count = 0;
+        ArrayList<Book> tempBookList = new ArrayList<>();
+
+        for (Book book : bookCollection){
+            if (book.getTitle().equals(title) && !book.getAvailability()){
+                tempBookList.add(book);
+                count += 1;
+            }
+        }
+
+        if (count == 1){
+            System.out.println("The following book:");
+            for (Book book : bookCollection) {
+                if (book.getTitle().equals(title) && !book.getAvailability()) {
+                    System.out.println(book.toString());
+                    book.setAvailability(true);
+                }
+            }
+            System.out.println("Has been checked in.");
+        }
+        else if (count > 1) {
+            System.out.println("Multiple books are available to be checked in under that title:");
+            for (Book book : tempBookList) {
+                System.out.println(book.toString());
+            }
+            System.out.println();
+            System.out.print("Enter the Barcode of the book you want to check in: ");
+            int barcodeNum = scan.nextInt();
+            for (Book book : bookCollection) {
+                if (book.getBarcode() == barcodeNum) {
+                    book.setAvailability(true);
+                }
+            }
+            System.out.println("The book has been successfully checked in.");
         }
         else {
-            System.out.println("Continue to check in here");
+            System.out.println("Book has already been checked in");
         }
+
     }
 
 
@@ -197,7 +230,7 @@ public class Library {
             else  {
                 System.out.println("The following book:");
                 for (Book book : bookCollection) {
-                    if (book.getTitle().equals(title)) {
+                    if (book.getTitle().equals(title) && book.getAvailability()) {
                         System.out.println(book.toString());
                         book.setAvailability(false);
                     }
