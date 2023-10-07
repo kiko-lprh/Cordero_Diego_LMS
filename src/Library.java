@@ -48,7 +48,8 @@ public class Library {
             Book book = iterator.next();
             if (book.getBarcode() == barcode) {
                 iterator.remove();
-                System.out.println("Book successfully removed.");
+                System.out.println("Book successfully removed.\n");
+                printCollection();
                 return;
             }
         }
@@ -80,7 +81,8 @@ public class Library {
                 Book book = iterator.next();
                 if (book.getTitle().equals(title)) {
                     iterator.remove();
-                    System.out.println("Book successfully removed.");
+                    System.out.println("Book successfully removed.\n");
+                    printCollection();
                     return;
                 }
             }
@@ -142,7 +144,7 @@ public class Library {
 
             printCollection();
 
-            System.out.println("Books added.");
+            System.out.println("\nBooks added.");
 
         } catch (IOException e) {
             // e.printStackTrace();
@@ -237,7 +239,8 @@ public class Library {
             }
         }
 
-        System.out.println("The book has been successfully checked " + either + ".");
+        System.out.println("The book has been successfully checked " + either + ".\n");
+        printCollection();
     }
 
 
@@ -259,7 +262,8 @@ public class Library {
                 }
             }
         }
-        System.out.println("Has been checked " + either + ".");
+        System.out.println("Has been checked " + either + ".\n");
+        printCollection();
     }
 
 
