@@ -9,7 +9,6 @@ This Library Management System is designed to manage a library’s book collecti
 out books, and providing a user-friendly interface for library staff.
 
 ## Features
-Features
 - Add books from a file
 - Delete books by barcode or title
 - Check books in and out
