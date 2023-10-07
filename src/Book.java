@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 /**
  * Diego Cordero
  * CEN 3024 - Software Development 1
@@ -12,7 +14,7 @@ public class Book {
     String title;
     String author;
     int barcode;
-    String dueDate; // Null by default
+    LocalDate dueDate; // Null by default
     Boolean availability; // if true book is checked in
 
 
@@ -55,12 +57,12 @@ public class Book {
     }
 
 
-    public void setDueDate(String dueDate){
+    public void setDueDate(LocalDate dueDate){
         this.dueDate = dueDate;
     }
 
 
-    public String getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 

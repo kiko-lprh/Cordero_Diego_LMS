@@ -7,6 +7,7 @@
  * adding, removing, and printing books in the collection.
  */
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.io.*;
 import java.util.Iterator;
@@ -124,7 +125,7 @@ public class Library {
      * parameters: String filePath
      * return: n/a
      * purpose: Opens and reads the file from the specified file path.
-     *          Sends the book information to addBook() so that it can be added to the collection.
+     * Sends the book information to addBook() so that it can be added to the collection.
      */
     public void openFile (String filePath) {
         try {
@@ -136,7 +137,7 @@ public class Library {
                 String[] tempArray = line.split(",");
                 addBook(tempArray[0], tempArray[1], tempArray[2]);
             }
-
+            System.out.println("File opened successfully.");
             read.close();
 
         } catch (IOException e) {
@@ -148,45 +149,25 @@ public class Library {
 
     /**
      * method: checkIn()
-     * parameters: String filePath
+     * parameters: String title, Scanner scan
      * return: n/a
-     * purpose: Checks a book back in after it has been checked out.
+     * purpose: Checks a book back in after it has been checked out. Displays an "error" if book is already checked in.
      */
     public void checkIn (String title, Scanner scan) {
         int count = 0;
         ArrayList<Book> tempBookList = new ArrayList<>();
 
-        for (Book book : bookCollection){
-            if (book.getTitle().equals(title) && !book.getAvailability()){
-                tempBookList.add(book);
-                count += 1;
-            }
-        }
+        count = searchCollection(title,count,tempBookList,"in");
 
         if (count == 1){
-            System.out.println("The following book:");
-            for (Book book : bookCollection) {
-                if (book.getTitle().equals(title) && !book.getAvailability()) {
-                    System.out.println(book.toString());
-                    book.setAvailability(true);
-                }
-            }
-            System.out.println("Has been checked in.");
+
+            singleBook(title,"in",true,null);
+
         }
         else if (count > 1) {
-            System.out.println("Multiple books are available to be checked in under that title:");
-            for (Book book : tempBookList) {
-                System.out.println(book.toString());
-            }
-            System.out.println();
-            System.out.print("Enter the Barcode of the book you want to check in: ");
-            int barcodeNum = scan.nextInt();
-            for (Book book : bookCollection) {
-                if (book.getBarcode() == barcodeNum) {
-                    book.setAvailability(true);
-                }
-            }
-            System.out.println("The book has been successfully checked in.");
+
+            multipleBooks(scan,"in",true,tempBookList,null);
+
         }
         else {
             System.out.println("Book has already been checked in");
@@ -197,45 +178,25 @@ public class Library {
 
     /**
      * method: checkOut()
-     * parameters: String filePath
+     * parameters: String title, Scanner scan
      * return: n/a
-     * purpose: Checks an available book out.
+     * purpose: Checks an available book out. Displays an "error" if book can't be checked out.
      */
     public void checkOut (String title, Scanner scan) {
         if (isAvailable(title)) {
+
             ArrayList<Book> tempBookList = new ArrayList<>();
             int count = 0;
-            for (Book book : bookCollection){
-                if (book.getTitle().equals(title) && book.getAvailability()){
-                    tempBookList.add(book);
-                    count += 1;
-                }
-            }
 
-            if (count > 1) {
-                System.out.println("Multiple books are available to be checked out under that title:");
-                for (Book book : tempBookList) {
-                    System.out.println(book.toString());
-                }
-                System.out.println();
-                System.out.print("Enter the Barcode of the book you want to check out: ");
-                int barcodeNum = scan.nextInt();
-                for (Book book : bookCollection) {
-                    if (book.getBarcode() == barcodeNum) {
-                        book.setAvailability(false);
-                    }
-                }
-                System.out.println("The book has been successfully checked out.");
+            count = searchCollection(title,count,tempBookList,"out");
+
+            if (count == 1) {
+
+                singleBook(title,"out",false,LocalDate.now().plusMonths(1));
+
             }
             else  {
-                System.out.println("The following book:");
-                for (Book book : bookCollection) {
-                    if (book.getTitle().equals(title) && book.getAvailability()) {
-                        System.out.println(book.toString());
-                        book.setAvailability(false);
-                    }
-                }
-                System.out.println("Has been checked out.");
+                multipleBooks(scan,"out",false,tempBookList,LocalDate.now().plusMonths(1));
             }
 
         }
@@ -245,6 +206,89 @@ public class Library {
     }
 
 
+    /**
+     * method: multipleBooks()
+     * parameters: Scanner scan, String either, Boolean available, ArrayList<Book> tempBookList, LocalDate date
+     * return: n/a
+     * purpose: If the searchCollection method finds multiple books, this method is called. It changes the availability
+     * and due date of the book according to whether it is being checked in or out.
+     */
+    public void multipleBooks(Scanner scan, String either, Boolean available, ArrayList<Book> tempBookList, LocalDate date){
+
+        System.out.println("Multiple books are available to be checked " + either + " under that title:");
+
+        for (Book book : tempBookList) {
+            System.out.println(book.toString());
+
+        }
+
+        System.out.println();
+        System.out.print("Enter the Barcode of the book you want to check " + either + ": ");
+
+        int barcodeNum = scan.nextInt();
+
+        for (Book book : bookCollection) {
+            if (book.getBarcode() == barcodeNum) {
+                book.setAvailability(available);
+                book.setDueDate(date);
+            }
+        }
+
+        System.out.println("The book has been successfully checked " + either + ".");
+    }
+
+
+    /**
+     * method: singleBook()
+     * parameters: String title, String either, Boolean available, LocalDate date
+     * return: n/a
+     * purpose: If the searchCollection method only finds one book, this method is called. It changes the availability
+     * and due date of the book according to whether it is being checked in or out.
+     */
+    public void singleBook(String title, String either, Boolean available, LocalDate date){
+        System.out.println("The following book:");
+        for (Book book : bookCollection) {
+            if (book.getTitle().equals(title)) {
+                if ((either.equals("in") && !book.getAvailability()) || (either.equals("out") && book.getAvailability())) {
+                    System.out.println(book.toString());
+                    book.setAvailability(available);
+                    book.setDueDate(date);
+                }
+            }
+        }
+        System.out.println("Has been checked " + either + ".");
+    }
+
+
+    /**
+     * method: searchCollection
+     * parameters: String title, int count, ArrayList<Book> tempBookList, String either
+     * return: int count
+     * purpose: Searches to see if there are multiple books with the same name and availability status. If there's no
+     * books that meet the criteria, returns 0. If there is only one, returns one.
+     */
+    public int searchCollection(String title, int count, ArrayList<Book> tempBookList, String either){
+        for (Book book : bookCollection){
+            if (book.getTitle().equals(title)){
+                if ((either.equals("in") && !book.getAvailability()) || (either.equals("out") && book.getAvailability())) {
+                    tempBookList.add(book);
+                    count += 1;
+                }
+            }
+        }
+        return count;
+    }
+
+
+    /**
+     * method: isAvailable
+     * parameters: String title
+     * return: boolean
+     * purpose: Checks if the book is available. NOTE: I forgot to implement this to the check in, I did the
+     * availability validation differently there. I will be changing that soon, I just wanted to make sure the
+     * program runs well and without errors first.
+     *
+     */
     public boolean isAvailable(String title){
         int availableCount = 0;
         for (Book book : bookCollection){
