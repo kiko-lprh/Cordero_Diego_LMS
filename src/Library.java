@@ -140,6 +140,10 @@ public class Library {
             System.out.println("File opened successfully.");
             read.close();
 
+            printCollection();
+
+            System.out.println("Books added.");
+
         } catch (IOException e) {
             // e.printStackTrace();
             System.out.println("File not found.");
@@ -154,6 +158,7 @@ public class Library {
      * purpose: Checks a book back in after it has been checked out. Displays an "error" if book is already checked in.
      */
     public void checkIn (String title, Scanner scan) {
+
         int count = 0;
         ArrayList<Book> tempBookList = new ArrayList<>();
 
@@ -170,7 +175,7 @@ public class Library {
 
         }
         else {
-            System.out.println("Book has already been checked in");
+            System.out.println("Error: Book could not be checked in.");
         }
 
     }
@@ -183,25 +188,23 @@ public class Library {
      * purpose: Checks an available book out. Displays an "error" if book can't be checked out.
      */
     public void checkOut (String title, Scanner scan) {
-        if (isAvailable(title)) {
 
-            ArrayList<Book> tempBookList = new ArrayList<>();
-            int count = 0;
+        ArrayList<Book> tempBookList = new ArrayList<>();
+        int count = 0;
 
-            count = searchCollection(title,count,tempBookList,"out");
+        count = searchCollection(title,count,tempBookList,"out");
 
-            if (count == 1) {
+        if (count == 1) {
 
-                singleBook(title,"out",false,LocalDate.now().plusMonths(1));
+            singleBook(title,"out",false,LocalDate.now().plusMonths(1));
 
-            }
-            else  {
-                multipleBooks(scan,"out",false,tempBookList,LocalDate.now().plusMonths(1));
-            }
+        }
+        else if (count > 1) {
+            multipleBooks(scan,"out",false,tempBookList,LocalDate.now().plusMonths(1));
 
         }
         else {
-            System.out.println("Book is not available");
+            System.out.println("Error: Book could not be checked out.");
         }
     }
 
@@ -264,8 +267,8 @@ public class Library {
      * method: searchCollection
      * parameters: String title, int count, ArrayList<Book> tempBookList, String either
      * return: int count
-     * purpose: Searches to see if there are multiple books with the same name and availability status. If there's no
-     * books that meet the criteria, returns 0. If there is only one, returns one.
+     * purpose: Searches to see if there are multiple books with the same name and availability status. Returns the
+     * number of books that meet the criteria.
      */
     public int searchCollection(String title, int count, ArrayList<Book> tempBookList, String either){
         for (Book book : bookCollection){
@@ -279,29 +282,4 @@ public class Library {
         return count;
     }
 
-
-    /**
-     * method: isAvailable
-     * parameters: String title
-     * return: boolean
-     * purpose: Checks if the book is available. NOTE: I forgot to implement this to the check in, I did the
-     * availability validation differently there. I will be changing that soon, I just wanted to make sure the
-     * program runs well and without errors first.
-     *
-     */
-    public boolean isAvailable(String title){
-        int availableCount = 0;
-        for (Book book : bookCollection){
-            if (book.getTitle().equals(title) && book.getAvailability()){
-                availableCount += 1;
-            }
-        }
-
-        if (availableCount > 0) {
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
 }

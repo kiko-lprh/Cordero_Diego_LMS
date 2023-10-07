@@ -20,7 +20,7 @@ public class Main {
      * method: main()
      * parameters: String[] args
      * return: n/a
-     * purpose: Displays menu to user
+     * purpose: Displays menu to user until user chooses to quit.
      */
     public static void main(String[] args) {
 
@@ -70,8 +70,8 @@ public class Main {
     /**
      * method: getPath()
      * parameters: Scanner scan
-     * return: string
-     * purpose: Get the path of the file to be opened from the user.
+     * return: String path
+     * purpose: Get the file's path from the user.
      */
     public static String getPath(Scanner scan){
 
@@ -87,8 +87,8 @@ public class Main {
     /**
      * method: getBarcode()
      * parameters: Scanner scan
-     * return: int
-     * purpose: Get the barcode of the book that is going to be deleted from the user.
+     * return: int barcode
+     * purpose: Get the book's barcode number from the user.
      */
     public static int getBarcode(Scanner scan){
         System.out.print("Enter the Book's Barcode #: ");
@@ -101,8 +101,8 @@ public class Main {
     /**
      * method: getTitle()
      * parameters: Scanner scan
-     * return: String
-     * purpose: Get the title a book from the user.
+     * return: String title
+     * purpose: Get the title of the book from the user.
      */
     public static String getTitle(Scanner scan){
         System.out.print("Enter the Book's Title: ");
