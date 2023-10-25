@@ -1,114 +1,50 @@
 /**
  * Diego Cordero
  * CEN 3024 - Software Development 1
- * August 31, 2023.
+ * October 25, 2023.
  * Main.java
- * This class serves as the main interface for the Library Management System. It presents a menu to the
- * user and handles user inputs.
+ * This class loads the LMS's GUI.
  */
 
-import java.util.Scanner;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 
-public class Main {
+import java.util.Objects;
 
 
-    static Library bookstore = new Library();
 
+public class Main extends Application {
+
+    public void start(Stage mainStage){
+        try{
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("gui.fxml")));
+            mainStage.setTitle("kk LMS");
+            mainStage.setScene(new Scene(root));
+            mainStage.setResizable(false);
+            mainStage.getIcons().add(new Image("img/icon.png"));
+            mainStage.show();
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 
     /**
      * method: main()
      * parameters: String[] args
      * return: n/a
-     * purpose: Displays menu to user until user chooses to quit.
+     * purpose: Launches the app.
      */
     public static void main(String[] args) {
+        launch(args);
 
-        Scanner scan = new Scanner(System.in);
-        String choice;
-
-        do {
-
-            System.out.println("\n(A)dd books from file.");
-            System.out.println("Delete book by (B)arcode #.");
-            System.out.println("Delete book by (T)itle.");
-            System.out.println("Check book (i)n.");
-            System.out.println("Check book (o)ut.");
-            System.out.println("(P)rint book collection.");
-            System.out.println("(Q)uit.\n");
-            System.out.print("Choice: ");
-            choice = scan.next();
-            scan.nextLine();
-            menuSwitch(choice, scan);
-
-
-        } while (!choice.equalsIgnoreCase("q"));
     }
 
-
-    /**
-     * method: menuSwitch()
-     * parameters: String choice, Scanner scan
-     * return: n/a
-     * purpose: Handles the menu displayed to the user
-     */
-    public static void menuSwitch (String choice, Scanner scan) {
-
-        switch (choice.toLowerCase()) {
-            case "a" -> bookstore.openFile(getPath(scan));
-            case "b" -> bookstore.removeBook(getBarcode(scan));
-            case "i" -> bookstore.checkIn(getTitle(scan), scan);
-            case "o" -> bookstore.checkOut(getTitle(scan), scan);
-            case "p" -> bookstore.printCollection();
-            case "t" -> bookstore.removeBook(getTitle(scan), scan);
-            default -> {
-            }
-        }
-    }
-
-
-    /**
-     * method: getPath()
-     * parameters: Scanner scan
-     * return: String path
-     * purpose: Get the file's path from the user.
-     */
-    public static String getPath(Scanner scan){
-
-
-        System.out.print("Enter filepath: ");
-        String path = scan.nextLine();
-        System.out.println();
-
-        return path;
-    }
-
-
-    /**
-     * method: getBarcode()
-     * parameters: Scanner scan
-     * return: int barcode
-     * purpose: Get the book's barcode number from the user.
-     */
-    public static int getBarcode(Scanner scan){
-        System.out.print("Enter the Book's Barcode #: ");
-        int barcode = scan.nextInt();
-        System.out.println();
-        return barcode;
-    }
-
-
-    /**
-     * method: getTitle()
-     * parameters: Scanner scan
-     * return: String title
-     * purpose: Get the title of the book from the user.
-     */
-    public static String getTitle(Scanner scan){
-        System.out.print("Enter the Book's Title: ");
-        String title = scan.nextLine();
-        System.out.println();
-        return title;
-    }
 
 }

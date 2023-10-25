@@ -14,7 +14,7 @@ public class Book {
     String title;
     String author;
     int barcode;
-    LocalDate dueDate; // Null by default
+    String dueDate; // Null by default
     Boolean availability; // if true book is checked in
 
 
@@ -22,7 +22,7 @@ public class Book {
         this.title = title;
         this.author = author;
         this.barcode = barcode;
-        dueDate = null;
+        dueDate = "Null";
         availability = true;
     }
 
@@ -58,11 +58,11 @@ public class Book {
 
 
     public void setDueDate(LocalDate dueDate){
-        this.dueDate = dueDate;
+        this.dueDate = String.valueOf(dueDate);
     }
 
 
-    public LocalDate getDueDate() {
+    public String getDueDate() {
         return dueDate;
     }
 

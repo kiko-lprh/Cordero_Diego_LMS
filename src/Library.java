@@ -7,6 +7,18 @@
  * adding, removing, and printing books in the collection.
  */
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.io.*;
@@ -49,7 +61,7 @@ public class Library {
             if (book.getBarcode() == barcode) {
                 iterator.remove();
                 System.out.println("Book successfully removed.\n");
-                printCollection();
+                //printCollection();
                 return;
             }
         }
@@ -82,7 +94,7 @@ public class Library {
                 if (book.getTitle().equals(title)) {
                     iterator.remove();
                     System.out.println("Book successfully removed.\n");
-                    printCollection();
+                    //printCollection();
                     return;
                 }
             }
@@ -101,22 +113,6 @@ public class Library {
         }
         else {
             System.out.println("Book not found");
-        }
-
-    }
-
-
-    /**
-     * method: printCollection()
-     * parameters: n/a
-     * return: n/a
-     * purpose: Prints the whole collection of books to the console.
-     */
-    public void printCollection() {
-
-        System.out.println();
-        for (Book book : bookCollection) {
-            System.out.println(book.toString());
         }
 
     }
@@ -142,7 +138,7 @@ public class Library {
             System.out.println("File opened successfully.");
             read.close();
 
-            printCollection();
+            //printCollection();
 
             System.out.println("\nBooks added.");
 
@@ -159,7 +155,7 @@ public class Library {
      * return: n/a
      * purpose: Checks a book back in after it has been checked out. Displays an "error" if book is already checked in.
      */
-    public void checkIn (String title, Scanner scan) {
+    public void checkIn (String title) throws IOException {
 
         int count = 0;
         ArrayList<Book> tempBookList = new ArrayList<>();
@@ -173,7 +169,7 @@ public class Library {
         }
         else if (count > 1) {
 
-            multipleBooks(scan,"in",true,tempBookList,null);
+            multipleBooks("in",true,tempBookList,null);
 
         }
         else {
@@ -189,7 +185,8 @@ public class Library {
      * return: n/a
      * purpose: Checks an available book out. Displays an "error" if book can't be checked out.
      */
-    public void checkOut (String title, Scanner scan) {
+    public void checkOut (String title) throws IOException {
+
 
         ArrayList<Book> tempBookList = new ArrayList<>();
         int count = 0;
@@ -202,7 +199,7 @@ public class Library {
 
         }
         else if (count > 1) {
-            multipleBooks(scan,"out",false,tempBookList,LocalDate.now().plusMonths(1));
+            multipleBooks("out",false,tempBookList,LocalDate.now().plusMonths(1));
 
         }
         else {
@@ -218,30 +215,46 @@ public class Library {
      * purpose: If the searchCollection method finds multiple books, this method is called. It changes the availability
      * and due date of the book according to whether it is being checked in or out.
      */
-    public void multipleBooks(Scanner scan, String either, Boolean available, ArrayList<Book> tempBookList, LocalDate date){
+    public void multipleBooks(String either, Boolean available, ArrayList<Book> tempBookList, LocalDate date) {
 
-        System.out.println("Multiple books are available to be checked " + either + " under that title:");
+        Stage multipleBooksStage = new Stage();
+        multipleBooksStage.initModality(Modality.APPLICATION_MODAL);
+        multipleBooksStage.setTitle("Select Book");
 
+        ObservableList<String> items = FXCollections.observableArrayList();
         for (Book book : tempBookList) {
-            System.out.println(book.toString());
-
+            items.add(book.toString());
         }
+        ListView<String> listView = new ListView<>(items);
 
-        System.out.println();
-        System.out.print("Enter the Barcode of the book you want to check " + either + ": ");
-
-        int barcodeNum = scan.nextInt();
-
-        for (Book book : bookCollection) {
-            if (book.getBarcode() == barcodeNum) {
-                book.setAvailability(available);
-                book.setDueDate(date);
+        Label label = new Label("Select a book from the list:");
+        TextField barcode = new TextField();
+        Button submitButton = new Button("Submit");
+        submitButton.setOnAction(e -> {
+            int index = listView.getSelectionModel().getSelectedIndex();
+            if (index != -1) {
+                int barcodeNum = tempBookList.get(index).getBarcode();
+                for (Book book : bookCollection) {
+                    if (book.getBarcode() == barcodeNum) {
+                        book.setAvailability(available);
+                        book.setDueDate(date);
+                    }
+                }
+                System.out.println("The book has been successfully checked " + either + ".\n");
+                multipleBooksStage.close();
             }
-        }
+        });
 
-        System.out.println("The book has been successfully checked " + either + ".\n");
-        printCollection();
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(label, listView, barcode, submitButton);
+
+        Scene scene = new Scene(vBox, 400, 400);
+        multipleBooksStage.setScene(scene);
+        multipleBooksStage.setResizable(false);
+        multipleBooksStage.getIcons().add(new Image("img/icon.png"));
+        multipleBooksStage.showAndWait();
     }
+
 
 
     /**
@@ -252,18 +265,15 @@ public class Library {
      * and due date of the book according to whether it is being checked in or out.
      */
     public void singleBook(String title, String either, Boolean available, LocalDate date){
-        System.out.println("The following book:");
         for (Book book : bookCollection) {
             if (book.getTitle().equals(title)) {
                 if ((either.equals("in") && !book.getAvailability()) || (either.equals("out") && book.getAvailability())) {
-                    System.out.println(book.toString());
                     book.setAvailability(available);
                     book.setDueDate(date);
                 }
             }
         }
         System.out.println("Has been checked " + either + ".\n");
-        printCollection();
     }
 
 
