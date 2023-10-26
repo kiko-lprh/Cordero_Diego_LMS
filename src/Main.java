@@ -1,7 +1,7 @@
 /**
  * Diego Cordero
  * CEN 3024 - Software Development 1
- * October 25, 2023.
+ * October 26, 2023.
  * Main.java
  * This class loads the LMS's GUI.
  */

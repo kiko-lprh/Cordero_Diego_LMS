@@ -35,7 +35,6 @@ public class Controller {
         dueDateColumn.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
     }
 
-
     @FXML
     private TableView<Book> bookTable;
 
@@ -64,6 +63,7 @@ public class Controller {
     public void printButton(){
         populateListView();
     }
+
 
     /**
      * method: checkInButton()
@@ -110,6 +110,13 @@ public class Controller {
     }
 
 
+    /**
+     * method: showTitleInputDialog()
+     * parameters: n/a
+     * return: String
+     * purpose: Creates an input stage, prompts user to enter a title into a TextField and then returns
+     * the inputted string.
+     */
     private String showTitleInputDialog() {
         try {
             Stage inputStage = new Stage();
@@ -130,6 +137,7 @@ public class Controller {
             inputStage.showAndWait();
 
             return textField.getText();
+
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -137,6 +145,12 @@ public class Controller {
     }
 
 
+    /**
+     * method: populateListView()
+     * parameters: n/a
+     * return: n/a
+     * purpose: populates the table with the contents book Collection
+     */
     private void populateListView() {
         bookTable.getItems().clear();
         bookTable.getItems().addAll(bookstore.bookCollection);

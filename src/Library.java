@@ -1,10 +1,10 @@
 /**
  * Diego Cordero
  * CEN 3024 - Software Development 1
- * August 31, 2023.
+ * October 26, 2023.
  * Library.java
  * This class manages the book collection within the book management system. It takes care of
- * adding, removing, and printing books in the collection.
+ * adding, removing, checkin in and checking out books.
  */
 
 import javafx.collections.FXCollections;
@@ -70,7 +70,7 @@ public class Library {
      * parameters: String title
      * return: n/a
      * purpose: Removes books from the collection that have the inputted title, if there are multiple
-     * books with the same title, prompts the user to enter the book's barcode number to delete it.
+     * books with the same title, prompts the user to select the specific book to be deleted.
      */
     public void removeBook(String title) throws IOException {
         Iterator<Book> iterator = bookCollection.iterator();
@@ -135,7 +135,7 @@ public class Library {
 
     /**
      * method: checkIn()
-     * parameters: String title, Scanner scan
+     * parameters: String title
      * return: n/a
      * purpose: Checks a book back in after it has been checked out. Displays an "error" if book is already checked in.
      */
@@ -165,7 +165,7 @@ public class Library {
 
     /**
      * method: checkOut()
-     * parameters: String title, Scanner scan
+     * parameters: String title
      * return: n/a
      * purpose: Checks an available book out. Displays an "error" if book can't be checked out.
      */
@@ -194,7 +194,7 @@ public class Library {
 
     /**
      * method: multipleBooks()
-     * parameters: Scanner scan, String either, Boolean available, ArrayList<Book> tempBookList, LocalDate date
+     * parameters: Scanner scan, String either, Boolean available, ArrayList<Book> tempBookList, LocalDate date, Boolean delete
      * return: n/a
      * purpose: If the searchCollection method finds multiple books, this method is called. It changes the availability
      * and due date of the book according to whether it is being checked in or out. If delete is true deletes book instead
@@ -299,7 +299,7 @@ public class Library {
 
 
     /**
-     * method: successAlert
+     * method: successAlert()
      * parameters: n/a
      * return: n/a
      * purpose: calls the createAndShowAlert method to create a Success Alert
@@ -308,8 +308,9 @@ public class Library {
         createAndShowAlert("Success", "fxmlVisuals/success.fxml");
     }
 
+
     /**
-     * method: successAlert
+     * method: errorAlert()
      * parameters: n/a
      * return: n/a
      * purpose: calls the createAndShowAlert method to create an Error Alert
@@ -320,8 +321,8 @@ public class Library {
 
 
     /**
-     * method: successAlert
-     * parameters: n/a
+     * method: createAndShowAlert()
+     * parameters: String title, String path
      * return: n/a
      * purpose: creates a new error or success alert
      */

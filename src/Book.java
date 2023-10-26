@@ -1,13 +1,13 @@
-import java.time.LocalDate;
-
 /**
  * Diego Cordero
  * CEN 3024 - Software Development 1
- * August 31, 2023.
+ * October 26, 2023.
  * Book.java
  * This class is the blueprint for a book in the LMS. Each instance of this class represents a
  * specific book.
  */
+
+import java.time.LocalDate;
 
 public class Book {
 
