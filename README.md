@@ -2,18 +2,19 @@
 
 Author: Diego Cordero<br><br>
 Course: CEN 3024 - Software Development 1<br><br>
-Date: August 31, 2023
+Date: October 24, 2023
 
 ## Description
 
-This Library Management System is designed to manage a library’s book collection. It provides a user-friendly command-line interface (CLI) that allows users to perform various operations on the book collection. <br><br>
-**Note**: The CLI will be replaced by a more user-friendly GUI in the future.
+This Library Management System is designed to manage a library’s book collection. It offers a friendly graphical user interface (GUI) that allows users to perform various operations on the book collection. <br><br>
 
 ## Features
 
 ### 1. Add Books
 
 The application reads book information from a file, including barcode, title, and author, and adds them to the library database.
+**Note**: Working on database integration.
+
 
 ### 2. Delete Books
 
