@@ -1,13 +1,21 @@
-import javafx.event.ActionEvent;
+/**
+ * Diego Cordero
+ * CEN 3024 - Software Development 1
+ * October 26, 2023.
+ * Controller.java
+ * This class controls the main buttons, populates the table view and handles text input
+ */
+
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
-import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
 
@@ -25,8 +33,6 @@ public class Controller {
         barcodeColumn.setCellValueFactory(new PropertyValueFactory<>("barcode"));
         availabilityColumn.setCellValueFactory(new PropertyValueFactory<>("availability"));
         dueDateColumn.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
-
-
     }
 
 
@@ -48,53 +54,88 @@ public class Controller {
     @FXML
     private TableColumn<Book, Boolean> availabilityColumn;
 
+
+    /**
+     * method: printButton()
+     * parameters: n/a
+     * return: n/a
+     * purpose: print button action controller
+     */
     public void printButton(){
         populateListView();
     }
 
-    public void checkInButton(){
+    /**
+     * method: checkInButton()
+     * parameters: n/a
+     * return: n/a
+     * purpose: checkIn button action controller
+     */
+    public void checkInButton() throws IOException {
         String title = showTitleInputDialog();
         if (title != null) {
-            try {
-                bookstore.checkIn(title);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            bookstore.checkIn(title);
             populateListView();
         }
     }
 
-    public void checkOutButton() {
+
+    /**
+     * method: checkOutButton()
+     * parameters: n/a
+     * return: n/a
+     * purpose: checkOut button action controller
+     */
+    public void checkOutButton() throws IOException {
         String title = showTitleInputDialog();
         if (title != null) {
-            try {
-                bookstore.checkOut(title);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            bookstore.checkOut(title);
             populateListView();
         }
     }
+
+
+    /**
+     * method: printButton()
+     * parameters: n/a
+     * return: n/a
+     * purpose: removeButton action controller
+     */
+    public void removeButton() throws IOException {
+        String title = showTitleInputDialog();
+        if (title != null) {
+            bookstore.removeBook(title);
+            populateListView();
+        }
+    }
+
 
     private String showTitleInputDialog() {
-        Stage inputStage = new Stage();
-        inputStage.initModality(Modality.APPLICATION_MODAL);
-        TextField textField = new TextField();
-        Button submitButton = new Button("Submit");
-        submitButton.setOnAction(e -> inputStage.close());
+        try {
+            Stage inputStage = new Stage();
+            inputStage.initModality(Modality.APPLICATION_MODAL);
 
-        VBox vBox = new VBox();
-        vBox.getChildren().addAll(textField, submitButton);
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxmlVisuals/inputStage.fxml"));
+            Parent root = fxmlLoader.load();
+            Scene scene = new Scene(root);
 
-        Scene scene = new Scene(vBox, 400, 200);
-        inputStage.setScene(scene);
-        inputStage.getIcons().add(new Image("img/icon.png"));
-        inputStage.setTitle("Enter Title");
-        inputStage.setResizable(false);
-        inputStage.showAndWait();
+            TextField textField = (TextField) scene.lookup("#inputText");
+            Button submitButton = (Button) scene.lookup("#inputButton");
+            submitButton.setOnAction(e -> inputStage.close());
 
-        return textField.getText();
+            inputStage.setScene(scene);
+            inputStage.getIcons().add(new Image("img/icon.png"));
+            inputStage.setTitle("Search");
+            inputStage.setResizable(false);
+            inputStage.showAndWait();
+
+            return textField.getText();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
 
     private void populateListView() {
         bookTable.getItems().clear();

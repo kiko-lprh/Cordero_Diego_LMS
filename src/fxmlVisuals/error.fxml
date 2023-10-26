@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="179.0" prefWidth="288.0" stylesheets="/css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="51.0" layoutY="106.0" prefHeight="19.0" prefWidth="187.0" text="Close this window and try again" textFill="#c61b0f">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label layoutX="125.0" layoutY="65.0" prefHeight="25.0" prefWidth="38.0" text="Error" textFill="#c61b0f">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>

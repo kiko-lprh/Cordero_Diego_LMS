@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="700.0" prefWidth="1000.0" stylesheets="styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<Pane prefHeight="700.0" prefWidth="1066.0" stylesheets="/css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
    <children>
       <Button layoutX="8.0" layoutY="646.0" mnemonicParsing="false" onAction="#checkInButton" prefHeight="47.0" prefWidth="89.0" text="Check-In">
          <font>
@@ -23,19 +23,19 @@
          <font>
             <Font size="13.0" />
          </font></Button>
-      <Pane layoutX="101.0" prefHeight="700.0" prefWidth="893.0">
+      <Pane layoutX="101.0" prefHeight="700.0" prefWidth="887.0">
          <children>
-            <TableView fx:id="bookTable" editable="true" layoutX="6.0" layoutY="41.0" prefHeight="653.0" prefWidth="879.0">
+            <TableView fx:id="bookTable" editable="true" layoutX="6.0" layoutY="41.0" prefHeight="653.0" prefWidth="948.0">
               <columns>
-                <TableColumn fx:id="barcodeColumn" prefWidth="83.0" resizable="false" text="Barcode #" />
-                <TableColumn fx:id="titleColumn" prefWidth="296.0" resizable="false" text="Title" />
+                  <TableColumn fx:id="barcodeColumn" prefWidth="83.0" resizable="false" text="Barcode #" />
+                  <TableColumn fx:id="titleColumn" prefWidth="296.0" resizable="false" text="Title" />
                   <TableColumn fx:id="authorColumn" prefWidth="298.0" resizable="false" text="Author" />
                   <TableColumn fx:id="availabilityColumn" prefWidth="101.0" resizable="false" text="Available" />
-                  <TableColumn fx:id="dueDateColumn" prefWidth="101.0" resizable="false" text="Due Date" />
+                  <TableColumn fx:id="dueDateColumn" prefWidth="168.0" resizable="false" text="Due Date" />
               </columns>
             </TableView>
          </children></Pane>
-      <MenuBar prefHeight="25.0" prefWidth="1000.0">
+      <MenuBar prefHeight="25.0" prefWidth="1066.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -49,5 +49,15 @@
           </Menu>
         </menus>
       </MenuBar>
+      <Button layoutX="8.0" layoutY="511.0" mnemonicParsing="false" onAction="#removeButton" prefHeight="47.0" prefWidth="89.0" text="Remove">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+      <Button layoutX="8.0" layoutY="442.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="89.0" text="Add">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
    </children>
 </Pane>

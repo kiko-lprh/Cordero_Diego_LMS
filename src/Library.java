@@ -9,24 +9,21 @@
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.*;
 import java.io.*;
-import java.util.Iterator;
-import java.util.Scanner;
 
 
 public class Library {
+
 
     public Library(){
 
@@ -53,19 +50,18 @@ public class Library {
      * return: n/a
      * purpose: Removes a book from the collection using the book's barcode as reference.
      */
-    public void removeBook(int barcode){
+    public void removeBook(int barcode) throws IOException {
         Iterator<Book> iterator = bookCollection.iterator();
 
         while (iterator.hasNext()) {
             Book book = iterator.next();
             if (book.getBarcode() == barcode) {
                 iterator.remove();
-                System.out.println("Book successfully removed.\n");
-                //printCollection();
+                successAlert();
                 return;
             }
         }
-        System.out.println("Book not found.");
+        errorAlert();
     }
 
 
@@ -76,7 +72,7 @@ public class Library {
      * purpose: Removes books from the collection that have the inputted title, if there are multiple
      * books with the same title, prompts the user to enter the book's barcode number to delete it.
      */
-    public void removeBook(String title, Scanner scan){
+    public void removeBook(String title) throws IOException {
         Iterator<Book> iterator = bookCollection.iterator();
         ArrayList<Book> tempBookList = new ArrayList<>();
         int bookCount = 0;
@@ -93,26 +89,18 @@ public class Library {
                 Book book = iterator.next();
                 if (book.getTitle().equals(title)) {
                     iterator.remove();
-                    System.out.println("Book successfully removed.\n");
-                    //printCollection();
+                    successAlert();
                     return;
                 }
             }
         }
         else if (bookCount > 1) {
-            System.out.println("Books found:\n");
 
-            for (Book book : tempBookList) {
-                System.out.println(book.toString());
-            }
+            multipleBooks("in",true,tempBookList,null,true);
 
-            System.out.println();
-            System.out.print("Enter the Barcode of the book you want to delete: ");
-            removeBook(scan.nextInt());
-            System.out.println();
         }
         else {
-            System.out.println("Book not found");
+            errorAlert();
         }
 
     }
@@ -135,15 +123,11 @@ public class Library {
                 String[] tempArray = line.split(",");
                 addBook(tempArray[0], tempArray[1], tempArray[2]);
             }
-            System.out.println("File opened successfully.");
             read.close();
 
-            //printCollection();
-
-            System.out.println("\nBooks added.");
+            //System.out.println("File Opened");
 
         } catch (IOException e) {
-            // e.printStackTrace();
             System.out.println("File not found.");
         }
     }
@@ -169,11 +153,11 @@ public class Library {
         }
         else if (count > 1) {
 
-            multipleBooks("in",true,tempBookList,null);
+            multipleBooks("in",true,tempBookList,null,false);
 
         }
         else {
-            System.out.println("Error: Book could not be checked in.");
+            errorAlert();
         }
 
     }
@@ -199,11 +183,11 @@ public class Library {
 
         }
         else if (count > 1) {
-            multipleBooks("out",false,tempBookList,LocalDate.now().plusMonths(1));
+            multipleBooks("out",false,tempBookList,LocalDate.now().plusMonths(1),false);
 
         }
         else {
-            System.out.println("Error: Book could not be checked out.");
+            errorAlert();
         }
     }
 
@@ -213,48 +197,65 @@ public class Library {
      * parameters: Scanner scan, String either, Boolean available, ArrayList<Book> tempBookList, LocalDate date
      * return: n/a
      * purpose: If the searchCollection method finds multiple books, this method is called. It changes the availability
-     * and due date of the book according to whether it is being checked in or out.
+     * and due date of the book according to whether it is being checked in or out. If delete is true deletes book instead
+     * of checking it in/out
      */
-    public void multipleBooks(String either, Boolean available, ArrayList<Book> tempBookList, LocalDate date) {
+    public void multipleBooks(String either, Boolean available, ArrayList<Book> tempBookList, LocalDate date, Boolean delete) throws IOException {
+        try {
+            Stage multipleBooksStage = new Stage();
+            multipleBooksStage.initModality(Modality.APPLICATION_MODAL);
 
-        Stage multipleBooksStage = new Stage();
-        multipleBooksStage.initModality(Modality.APPLICATION_MODAL);
-        multipleBooksStage.setTitle("Select Book");
-
-        ObservableList<String> items = FXCollections.observableArrayList();
-        for (Book book : tempBookList) {
-            items.add(book.toString());
-        }
-        ListView<String> listView = new ListView<>(items);
-
-        Label label = new Label("Select a book from the list:");
-        TextField barcode = new TextField();
-        Button submitButton = new Button("Submit");
-        submitButton.setOnAction(e -> {
-            int index = listView.getSelectionModel().getSelectedIndex();
-            if (index != -1) {
-                int barcodeNum = tempBookList.get(index).getBarcode();
-                for (Book book : bookCollection) {
-                    if (book.getBarcode() == barcodeNum) {
-                        book.setAvailability(available);
-                        book.setDueDate(date);
-                    }
-                }
-                System.out.println("The book has been successfully checked " + either + ".\n");
-                multipleBooksStage.close();
+            if (delete){
+                multipleBooksStage.setTitle("Select book to delete");
+            }else {
+                multipleBooksStage.setTitle("Select book to check " + either);
             }
-        });
 
-        VBox vBox = new VBox();
-        vBox.getChildren().addAll(label, listView, barcode, submitButton);
 
-        Scene scene = new Scene(vBox, 400, 400);
-        multipleBooksStage.setScene(scene);
-        multipleBooksStage.setResizable(false);
-        multipleBooksStage.getIcons().add(new Image("img/icon.png"));
-        multipleBooksStage.showAndWait();
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("fxmlVisuals/multipleBooks.fxml")));
+            Scene scene = new Scene(root);
+
+            multipleBooksStage.setScene(scene);
+            multipleBooksStage.setResizable(false);
+            multipleBooksStage.getIcons().add(new Image("img/icon.png"));
+
+            ListView<String> listView = (ListView<String>) scene.lookup("#multipleBooksListView");
+            Button submitButton = (Button) scene.lookup("#multipleBooksButton");
+
+            ObservableList<String> items = FXCollections.observableArrayList();
+
+            for (Book book : tempBookList) {
+                items.add(book.toString());
+            }
+
+            listView.setItems(items);
+
+            submitButton.setOnAction(e -> {
+                int index = listView.getSelectionModel().getSelectedIndex();
+                if (index != -1) {
+                    int barcodeNum = tempBookList.get(index).getBarcode();
+                    ArrayList<Book> bookToRemove = new ArrayList<>();
+                    for (Book book : bookCollection) {
+                        if (book.getBarcode() == barcodeNum) {
+                            if (delete) {
+                                bookToRemove.add(book);
+                            } else {
+                                book.setAvailability(available);
+                                book.setDueDate(date);
+                            }
+                        }
+                    }
+                    bookCollection.removeAll(bookToRemove);
+                    multipleBooksStage.close();
+                }
+            });
+            multipleBooksStage.showAndWait();
+            successAlert();
+        } catch (Exception e) {
+            e.printStackTrace();
+            errorAlert();
+        }
     }
-
 
 
     /**
@@ -264,7 +265,7 @@ public class Library {
      * purpose: If the searchCollection method only finds one book, this method is called. It changes the availability
      * and due date of the book according to whether it is being checked in or out.
      */
-    public void singleBook(String title, String either, Boolean available, LocalDate date){
+    public void singleBook(String title, String either, Boolean available, LocalDate date) throws IOException {
         for (Book book : bookCollection) {
             if (book.getTitle().equals(title)) {
                 if ((either.equals("in") && !book.getAvailability()) || (either.equals("out") && book.getAvailability())) {
@@ -273,7 +274,7 @@ public class Library {
                 }
             }
         }
-        System.out.println("Has been checked " + either + ".\n");
+        successAlert();
     }
 
 
@@ -294,6 +295,46 @@ public class Library {
             }
         }
         return count;
+    }
+
+
+    /**
+     * method: successAlert
+     * parameters: n/a
+     * return: n/a
+     * purpose: calls the createAndShowAlert method to create a Success Alert
+     */
+    private void successAlert() throws IOException {
+        createAndShowAlert("Success", "fxmlVisuals/success.fxml");
+    }
+
+    /**
+     * method: successAlert
+     * parameters: n/a
+     * return: n/a
+     * purpose: calls the createAndShowAlert method to create an Error Alert
+     */
+    private void errorAlert() throws IOException {
+        createAndShowAlert("Error", "fxmlVisuals/error.fxml");
+    }
+
+
+    /**
+     * method: successAlert
+     * parameters: n/a
+     * return: n/a
+     * purpose: creates a new error or success alert
+     */
+    private void createAndShowAlert(String title, String path) throws IOException {
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
+        stage.setTitle(title);
+        stage.getIcons().add(new Image("img/icon.png"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(path)));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 
 }

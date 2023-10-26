@@ -22,7 +22,7 @@ public class Book {
         this.title = title;
         this.author = author;
         this.barcode = barcode;
-        dueDate = "Null";
+        dueDate = "null";
         availability = true;
     }
 

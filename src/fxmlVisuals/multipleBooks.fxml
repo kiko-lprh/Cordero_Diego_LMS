@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="479.0" prefWidth="559.0" stylesheets="/css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="multipleBooksLabel" layoutX="14.0" layoutY="14.0" prefHeight="17.0" prefWidth="411.0" text="Enter Barcode or pick book from the list.">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <ListView fx:id="multipleBooksListView" layoutX="14.0" layoutY="38.0" prefHeight="395.0" prefWidth="531.0" />
+      <Button fx:id="multipleBooksButton" layoutX="231.0" layoutY="438.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="97.0" text="Select">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+   </children>
+</Pane>

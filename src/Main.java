@@ -13,16 +13,22 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-
 import java.util.Objects;
 
 
 
 public class Main extends Application {
 
+
+    /**
+     * method: start()
+     * parameters: String[] args
+     * return: n/a
+     * purpose: Main Stage.
+     */
     public void start(Stage mainStage){
         try{
-            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("gui.fxml")));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("fxmlVisuals/gui.fxml")));
             mainStage.setTitle("kk LMS");
             mainStage.setScene(new Scene(root));
             mainStage.setResizable(false);
@@ -34,6 +40,8 @@ public class Main extends Application {
             e.printStackTrace();
         }
     }
+
+
 
     /**
      * method: main()

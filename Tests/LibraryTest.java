@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -47,7 +48,7 @@ class LibraryTest {
 
 
     @org.junit.jupiter.api.Test
-    void removeBookByBarcode() {
+    void removeBookByBarcode() throws IOException {
 
         //Add book to the library collection
         testLibrary.addBook("1101","Book 1", "Diego Cordero");
@@ -62,7 +63,7 @@ class LibraryTest {
 
 
     @org.junit.jupiter.api.Test
-    void removeBookByTitleSingle() {
+    void removeBookByTitleSingle() throws IOException {
 
         Scanner scan = new Scanner(System.in);
 
@@ -70,7 +71,7 @@ class LibraryTest {
         testLibrary.addBook("1101","Book 1", "Diego Cordero");
 
         //Remove the book using its title
-        testLibrary.removeBook("Book 1", scan);
+        testLibrary.removeBook("Book 1");
 
         // Check if the book is removed from the library
         assertEquals(0, testLibrary.bookCollection.size());
@@ -78,7 +79,7 @@ class LibraryTest {
 
 
     @org.junit.jupiter.api.Test
-    void removeBookByTitleMultiple() {
+    void removeBookByTitleMultiple() throws IOException {
 
         Scanner scan = new Scanner("1104\n");
 
@@ -94,7 +95,7 @@ class LibraryTest {
         assertEquals(6, testLibrary.bookCollection.size());
 
         //Remove the book using its title
-        testLibrary.removeBook("Book 1", scan);
+        testLibrary.removeBook("Book 1");
 
         // Check if the book was removed from the library
         assertEquals(5, testLibrary.bookCollection.size());
@@ -104,7 +105,7 @@ class LibraryTest {
 
 
     @org.junit.jupiter.api.Test
-    void checkInSingle() {
+    void checkInSingle() throws IOException {
 
         Scanner scan = new Scanner(System.in);
 
@@ -112,8 +113,8 @@ class LibraryTest {
         testLibrary.addBook("1101","Book 1", "Diego Cordero");
 
         // Check book out and then back in
-        testLibrary.checkOut("Book 1", scan);
-        testLibrary.checkIn("Book 1", scan);
+        testLibrary.checkOut("Book 1");
+        testLibrary.checkIn("Book 1");
 
         // Check if book's due date is correctly set
         assertNull(testLibrary.bookCollection.get(0).getDueDate());
@@ -125,7 +126,7 @@ class LibraryTest {
 
 
     @org.junit.jupiter.api.Test
-    void checkInMultiple() {
+    void checkInMultiple() throws IOException {
 
         LocalDate expected = LocalDate.now().plusMonths(1);
 
@@ -138,18 +139,18 @@ class LibraryTest {
         testLibrary.addBook("1106","Book 8", "Diego Cordero");
 
         // Check every book out
-        testLibrary.checkOut("Book 1", new Scanner("1101\n"));
-        testLibrary.checkOut("Book 3", new Scanner(""));
-        testLibrary.checkOut("Book 1", new Scanner("1104"));
-        testLibrary.checkOut("Book 1", new Scanner(""));
-        testLibrary.checkOut("Book 7", new Scanner(""));
-        testLibrary.checkOut("Book 8", new Scanner(""));
+        testLibrary.checkOut("Book 1");
+        testLibrary.checkOut("Book 3");
+        testLibrary.checkOut("Book 1");
+        testLibrary.checkOut("Book 1");
+        testLibrary.checkOut("Book 7");
+        testLibrary.checkOut("Book 8");
 
         // Only check some of them back in
-        testLibrary.checkIn("Book 1", new Scanner("1101\n"));
-        testLibrary.checkIn("Book 1", new Scanner("1102\n"));
-        testLibrary.checkIn("Book 1", new Scanner(""));
-        testLibrary.checkIn("Book 3", new Scanner(""));
+        testLibrary.checkIn("Book 1");
+        testLibrary.checkIn("Book 1");
+        testLibrary.checkIn("Book 1");
+        testLibrary.checkIn("Book 3");
 
         /* Check if each book's due date is correctly set. Only the ones that were checked back in should be set
         to NULL. The rest should have the date set to one month from now. */
@@ -173,7 +174,7 @@ class LibraryTest {
 
 
     @org.junit.jupiter.api.Test
-    void checkOutSingle() {
+    void checkOutSingle() throws IOException {
 
         LocalDate expected = LocalDate.now().plusMonths(1);
         Scanner scan = new Scanner(System.in);
@@ -182,7 +183,7 @@ class LibraryTest {
         testLibrary.addBook("1105","Book 7", "Diego Cordero");
 
         // Check book out
-        testLibrary.checkOut("Book 7", scan);
+        testLibrary.checkOut("Book 7");
 
         // Check if book's due date is correctly set
         assertEquals(expected,testLibrary.bookCollection.get(0).getDueDate());
@@ -194,7 +195,7 @@ class LibraryTest {
 
 
     @org.junit.jupiter.api.Test
-    void checkOutMultiple() {
+    void checkOutMultiple() throws IOException {
 
         LocalDate expected = LocalDate.now().plusMonths(1);
 
@@ -210,11 +211,11 @@ class LibraryTest {
         testLibrary.addBook("1113","Book 22", "Diego Cordero");
 
         // Only check some books out
-        testLibrary.checkOut("Book 7", new Scanner("1106\n"));
-        testLibrary.checkOut("Book 10", new Scanner(""));
-        testLibrary.checkOut("Book 11", new Scanner("1111\n"));
-        testLibrary.checkOut("Book 22", new Scanner("1113\n"));
-        testLibrary.checkOut("Book 22", new Scanner(""));
+        testLibrary.checkOut("Book 7");
+        testLibrary.checkOut("Book 10");
+        testLibrary.checkOut("Book 11");
+        testLibrary.checkOut("Book 22");
+        testLibrary.checkOut("Book 22");
 
         // Check if each book's due date is correctly set. The ones that weren't checked out should be null.
         assertNull(testLibrary.bookCollection.get(0).getDueDate());
