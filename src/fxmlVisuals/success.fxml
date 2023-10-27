@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="179.0" prefWidth="288.0" stylesheets="/css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="330.0" stylesheets="/css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label layoutX="33.0" layoutY="110.0" prefHeight="25.0" prefWidth="225.0" text="You can now close this window" textAlignment="JUSTIFY" textFill="#139e07">
+      <Label alignment="CENTER" layoutX="80.0" layoutY="113.0" prefHeight="25.0" prefWidth="171.0" text="You can close this window" textFill="#3aaf3c" />
+      <Label fx:id="successText" alignment="CENTER" layoutX="9.0" layoutY="82.0" prefHeight="31.0" prefWidth="312.0" text="Success message goes here" textAlignment="JUSTIFY" textFill="#3aaf3c">
          <font>
-            <Font size="16.0" />
+            <Font size="21.0" />
          </font>
       </Label>
-      <Label layoutX="12.0" layoutY="30.0" prefHeight="25.0" prefWidth="264.0" text="Action performed successfully" textFill="#139e07">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
+      <ImageView fitHeight="56.0" fitWidth="56.0" layoutX="137.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="/img/done-icon.png" />
+         </image>
+      </ImageView>
    </children>
 </Pane>

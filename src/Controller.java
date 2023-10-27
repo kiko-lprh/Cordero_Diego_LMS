@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -66,10 +67,10 @@ public class Controller {
      * method: checkInButton()
      * parameters: n/a
      * return: n/a
-     * purpose: checkIn button action controller
+     * purpose: checkIn button action controller. calls the checkIn(String) method in the Library Class
      */
     public void checkInButton() throws IOException {
-        String title = showTitleInputDialog();
+        String title = showTitleInputDialog("title");
         if (title != null) {
             bookstore.checkIn(title);
             populateListView();
@@ -81,10 +82,10 @@ public class Controller {
      * method: checkOutButton()
      * parameters: n/a
      * return: n/a
-     * purpose: checkOut button action controller
+     * purpose: checkOut button action controller. calls the checkOut(String) method in the Library Class
      */
     public void checkOutButton() throws IOException {
-        String title = showTitleInputDialog();
+        String title = showTitleInputDialog("title");
         if (title != null) {
             bookstore.checkOut(title);
             populateListView();
@@ -96,10 +97,10 @@ public class Controller {
      * method: removeTitle()
      * parameters: n/a
      * return: n/a
-     * purpose: remove by title button action controller
+     * purpose: remove by title button action controller. calls the removeBook(String) method in the Library Class
      */
     public void removeTitle() throws IOException {
-        String title = showTitleInputDialog();
+        String title = showTitleInputDialog("title");
         if (title != null) {
             bookstore.removeBook(title);
             populateListView();
@@ -111,18 +112,20 @@ public class Controller {
      * method: removeBarcode()
      * parameters: n/a
      * return: n/a
-     * purpose: remove by barcode button action controller
+     * purpose: remove by barcode button action controller. calls the removeBook(int) method in the Library Class
      */
     public void removeBarcode() throws IOException {
         int barcode;
-        String title = showTitleInputDialog();
-        if (title.matches("\\d+")) { // This line verifies that the string doesn't contain any letters
-            barcode = Integer.parseInt(Objects.requireNonNull(showTitleInputDialog()));
+        String title = showTitleInputDialog("barcode");
+
+        // This line verifies that the string doesn't contain any letters
+        if (title.matches("\\d+")) {
+            barcode = Integer.parseInt(Objects.requireNonNull(title));
             bookstore.removeBook(barcode);
             populateListView();
         }
         else{
-            bookstore.errorAlert();
+            bookstore.errorAlert("Enter a valid barcode.");
         }
     }
 
@@ -131,10 +134,10 @@ public class Controller {
      * method: showTitleInputDialog()
      * parameters: n/a
      * return: String
-     * purpose: Creates an input stage, prompts user to enter a title into a TextField and then returns
-     * the inputted string.
+     * purpose: Creates an input stage, prompts user to enter a title/barcode into a TextField and then returns
+     * the inputted title/barcode.
      */
-    private String showTitleInputDialog() {
+    private String showTitleInputDialog(String either) {
         try {
             Stage inputStage = new Stage();
             inputStage.initModality(Modality.APPLICATION_MODAL);
@@ -142,10 +145,18 @@ public class Controller {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxmlVisuals/inputStage.fxml"));
             Parent root = fxmlLoader.load();
             Scene scene = new Scene(root);
-
+            Label label = (Label) scene.lookup("#inputLabel");
             TextField textField = (TextField) scene.lookup("#inputText");
             Button submitButton = (Button) scene.lookup("#inputButton");
             submitButton.setOnAction(e -> inputStage.close());
+
+
+            if (either.equals("barcode")){
+                label.setText("Enter book's barcode");
+            }
+            else {
+                label.setText("Enter book's title");
+            }
 
             inputStage.setScene(scene);
             inputStage.getIcons().add(new Image("img/icon.png"));
@@ -178,7 +189,7 @@ public class Controller {
      * method: menuOpenFile()
      * parameters: n/a
      * return: n/a
-     * purpose: controls the 'Open File' menu option.
+     * purpose: controls the 'Open File' menu option. Calls the openFile method to open a file
      */
     public void menuOpenFile() throws IOException {
         bookstore.openFile();
@@ -187,7 +198,7 @@ public class Controller {
 
 
     /**
-     * method: menuOpenFile()
+     * method: menuQuitApp()
      * parameters: n/a
      * return: n/a
      * purpose: controls the "Quit" menu option; closes the app.
@@ -197,8 +208,9 @@ public class Controller {
         stage.close();
     }
 
+
     /**
-     * method: menuOpenFile()
+     * method: openGithub()
      * parameters: n/a
      * return: n/a
      * purpose: controls the 'GitHub' menu option. Tries to open this project's GitHub repo on the PC's default browser.

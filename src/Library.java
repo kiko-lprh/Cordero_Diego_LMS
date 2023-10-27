@@ -58,11 +58,11 @@ public class Library {
             Book book = iterator.next();
             if (book.getBarcode() == barcode) {
                 iterator.remove();
-                successAlert();
+                successAlert("Book successfully deleted.");
                 return;
             }
         }
-        errorAlert();
+        errorAlert("Book could not be found.");
     }
 
 
@@ -90,7 +90,7 @@ public class Library {
                 Book book = iterator.next();
                 if (book.getTitle().equals(title)) {
                     iterator.remove();
-                    successAlert();
+                    successAlert("Book successfully deleted.");
                     return;
                 }
             }
@@ -101,7 +101,7 @@ public class Library {
 
         }
         else {
-            errorAlert();
+            errorAlert("Book could not be found.");
         }
 
     }
@@ -136,13 +136,14 @@ public class Library {
                     addBook(tempArray[0], tempArray[1], tempArray[2]);
                 }
                 read.close();
-                successAlert();
+                successAlert("File successfully opened.");
                 return;
             } catch (IOException e) {
+                System.out.println("Error opening file");
                 e.printStackTrace();
             }
         }
-        errorAlert();
+        errorAlert("File could not be opened.");
     }
 
 
@@ -170,7 +171,7 @@ public class Library {
 
         }
         else {
-            errorAlert();
+            errorAlert("Book not found.");
         }
 
     }
@@ -200,7 +201,7 @@ public class Library {
 
         }
         else {
-            errorAlert();
+            errorAlert("Book not found.");
         }
     }
 
@@ -263,10 +264,20 @@ public class Library {
                 }
             });
             multipleBooksStage.showAndWait();
-            successAlert();
+            if (delete){
+                successAlert("Book successfully deleted.");
+            }else {
+                successAlert("Book successfully checked " + either + ".");
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            errorAlert();
+
+            if (delete){
+                errorAlert("Book could not be deleted.");
+            }else {
+                errorAlert("Book could not be checked " + either + ".");
+            }
+
         }
     }
 
@@ -287,7 +298,7 @@ public class Library {
                 }
             }
         }
-        successAlert();
+        successAlert("Book successfully checked " + either +  ".");
     }
 
 
@@ -317,8 +328,8 @@ public class Library {
      * return: n/a
      * purpose: calls the createAndShowAlert method to create a Success Alert
      */
-    public void successAlert() throws IOException {
-        createAndShowAlert("Success", "fxmlVisuals/success.fxml");
+    public void successAlert(String message) throws IOException {
+        createAndShowAlert("Success", "fxmlVisuals/success.fxml", message);
     }
 
 
@@ -328,8 +339,8 @@ public class Library {
      * return: n/a
      * purpose: calls the createAndShowAlert method to create an Error Alert
      */
-    public void errorAlert() throws IOException {
-        createAndShowAlert("Error", "fxmlVisuals/error.fxml");
+    public void errorAlert(String message) throws IOException {
+        createAndShowAlert("Error", "fxmlVisuals/error.fxml", message);
     }
 
 
@@ -339,7 +350,7 @@ public class Library {
      * return: n/a
      * purpose: creates a new error or success alert
      */
-    private void createAndShowAlert(String title, String path) throws IOException {
+    private void createAndShowAlert(String title, String path, String message) throws IOException {
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setResizable(false);
@@ -347,6 +358,16 @@ public class Library {
         stage.getIcons().add(new Image("img/icon.png"));
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(path)));
         Scene scene = new Scene(root);
+
+        if (title.equals("Error")){
+            Label errorText = (Label) scene.lookup("#errorText");
+            errorText.setText(message);
+        }
+        else{
+            Label successText = (Label) scene.lookup("#successText");
+            successText.setText(message);
+        }
+
         stage.setScene(scene);
         stage.show();
     }

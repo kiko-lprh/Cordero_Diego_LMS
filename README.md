@@ -2,7 +2,7 @@
 
 Author: Diego Cordero<br><br>
 Course: CEN 3024 - Software Development 1<br><br>
-Date: October 24, 2023
+Date: October 27, 2023
 
 ## Description
 
@@ -29,7 +29,7 @@ There are two options for deleting books:
 
 ### 4. Print Book Collection
 
-Neatly prints all the books in the collection. Displays detailed information about each book.
+Prints all the books in collection into a table. Displays detailed information about each book.
 
 ## Usage
 
