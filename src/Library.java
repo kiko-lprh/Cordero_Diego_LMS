@@ -317,7 +317,7 @@ public class Library {
      * return: n/a
      * purpose: calls the createAndShowAlert method to create a Success Alert
      */
-    private void successAlert() throws IOException {
+    public void successAlert() throws IOException {
         createAndShowAlert("Success", "fxmlVisuals/success.fxml");
     }
 
@@ -328,7 +328,7 @@ public class Library {
      * return: n/a
      * purpose: calls the createAndShowAlert method to create an Error Alert
      */
-    private void errorAlert() throws IOException {
+    public void errorAlert() throws IOException {
         createAndShowAlert("Error", "fxmlVisuals/error.fxml");
     }
 

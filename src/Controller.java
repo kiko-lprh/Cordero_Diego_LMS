@@ -106,6 +106,7 @@ public class Controller {
         }
     }
 
+
     /**
      * method: removeBarcode()
      * parameters: n/a
@@ -113,10 +114,15 @@ public class Controller {
      * purpose: remove by barcode button action controller
      */
     public void removeBarcode() throws IOException {
-        int barcode = Integer.parseInt(Objects.requireNonNull(showTitleInputDialog()));
-        if (barcode != -1) {
+        int barcode;
+        String title = showTitleInputDialog();
+        if (title.matches("\\d+")) { // This line verifies that the string doesn't contain any letters
+            barcode = Integer.parseInt(Objects.requireNonNull(showTitleInputDialog()));
             bookstore.removeBook(barcode);
             populateListView();
+        }
+        else{
+            bookstore.errorAlert();
         }
     }
 
