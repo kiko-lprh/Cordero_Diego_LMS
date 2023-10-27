@@ -6,17 +6,25 @@
  * This class controls the main buttons, populates the table view and handles text input
  */
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Objects;
 
 
 public class Controller {
@@ -25,9 +33,6 @@ public class Controller {
 
     @FXML
     public void initialize() {
-        String filePath = "C:\\Users\\corde\\Desktop\\1.txt";
-        bookstore.openFile(filePath);
-        System.out.println(bookstore.bookCollection.get(0).toString());
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
         barcodeColumn.setCellValueFactory(new PropertyValueFactory<>("barcode"));
@@ -53,16 +58,8 @@ public class Controller {
     @FXML
     private TableColumn<Book, Boolean> availabilityColumn;
 
-
-    /**
-     * method: printButton()
-     * parameters: n/a
-     * return: n/a
-     * purpose: print button action controller
-     */
-    public void printButton(){
-        populateListView();
-    }
+    @FXML
+    private Pane mainPane;
 
 
     /**
@@ -96,15 +93,29 @@ public class Controller {
 
 
     /**
-     * method: printButton()
+     * method: removeTitle()
      * parameters: n/a
      * return: n/a
-     * purpose: removeButton action controller
+     * purpose: remove by title button action controller
      */
-    public void removeButton() throws IOException {
+    public void removeTitle() throws IOException {
         String title = showTitleInputDialog();
         if (title != null) {
             bookstore.removeBook(title);
+            populateListView();
+        }
+    }
+
+    /**
+     * method: removeBarcode()
+     * parameters: n/a
+     * return: n/a
+     * purpose: remove by barcode button action controller
+     */
+    public void removeBarcode() throws IOException {
+        int barcode = Integer.parseInt(Objects.requireNonNull(showTitleInputDialog()));
+        if (barcode != -1) {
+            bookstore.removeBook(barcode);
             populateListView();
         }
     }
@@ -151,9 +162,47 @@ public class Controller {
      * return: n/a
      * purpose: populates the table with the contents book Collection
      */
-    private void populateListView() {
+    public void populateListView() {
         bookTable.getItems().clear();
         bookTable.getItems().addAll(bookstore.bookCollection);
+    }
+
+
+    /**
+     * method: menuOpenFile()
+     * parameters: n/a
+     * return: n/a
+     * purpose: controls the 'Open File' menu option.
+     */
+    public void menuOpenFile() throws IOException {
+        bookstore.openFile();
+        populateListView();
+    }
+
+
+    /**
+     * method: menuOpenFile()
+     * parameters: n/a
+     * return: n/a
+     * purpose: controls the "Quit" menu option; closes the app.
+     */
+    public void menuQuitApp() {
+        Stage stage = (Stage) mainPane.getScene().getWindow();
+        stage.close();
+    }
+
+    /**
+     * method: menuOpenFile()
+     * parameters: n/a
+     * return: n/a
+     * purpose: controls the 'GitHub' menu option. Tries to open this project's GitHub repo on the PC's default browser.
+     */
+    public void openGithub() {
+        try {
+            Desktop.getDesktop().browse(new URI("https://github.com/kiko-lprh/Cordero_Diego_LMS"));
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -110,26 +111,38 @@ public class Library {
      * method: openFile()
      * parameters: String filePath
      * return: n/a
-     * purpose: Opens and reads the file from the specified file path.
+     * purpose: Opens and reads the chosen file from the FileChooser.
      * Sends the book information to addBook() so that it can be added to the collection.
      */
-    public void openFile (String filePath) {
-        try {
-            BufferedReader read = new BufferedReader(new FileReader(filePath));
-            String line;
+    public void openFile () throws IOException {
+        bookCollection.clear();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Text Files", "*.txt"),
+                new FileChooser.ExtensionFilter("CSV Files", "*.csv")
+        );
+        fileChooser.setTitle("Open File");
+        Stage stage = new Stage();
+        File chosenFile =fileChooser.showOpenDialog(stage);
+
+        if(chosenFile != null){
+            try {
+                BufferedReader read = new BufferedReader(new FileReader(chosenFile));
+                String line;
 
 
-            while ((line = read.readLine()) != null) {
-                String[] tempArray = line.split(",");
-                addBook(tempArray[0], tempArray[1], tempArray[2]);
+                while ((line = read.readLine()) != null) {
+                    String[] tempArray = line.split(",");
+                    addBook(tempArray[0], tempArray[1], tempArray[2]);
+                }
+                read.close();
+                successAlert();
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            read.close();
-
-            //System.out.println("File Opened");
-
-        } catch (IOException e) {
-            System.out.println("File not found.");
         }
+        errorAlert();
     }
 
 

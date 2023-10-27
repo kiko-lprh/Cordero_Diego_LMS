@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -9,55 +10,58 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="700.0" prefWidth="1066.0" stylesheets="/css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<Pane fx:id="mainPane" prefHeight="700.0" prefWidth="1113.0" stylesheets="/css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
    <children>
-      <Button layoutX="8.0" layoutY="646.0" mnemonicParsing="false" onAction="#checkInButton" prefHeight="47.0" prefWidth="89.0" text="Check-In">
+      <Button layoutX="8.0" layoutY="97.0" mnemonicParsing="false" onAction="#checkInButton" prefHeight="47.0" prefWidth="89.0" text="Check-In">
          <font>
             <Font size="13.0" />
          </font></Button>
-      <Button layoutX="8.0" layoutY="579.0" mnemonicParsing="false" onAction="#checkOutButton" prefHeight="47.0" prefWidth="89.0" text="Check-Out">
+      <Button layoutX="8.0" layoutY="156.0" mnemonicParsing="false" onAction="#checkOutButton" prefHeight="47.0" prefWidth="89.0" text="Check-Out">
          <font>
             <Font size="13.0" />
          </font></Button>
-      <Button layoutX="8.0" layoutY="40.0" mnemonicParsing="false" onAction="#printButton" prefHeight="47.0" prefWidth="89.0" text="Show">
+      <Button layoutX="8.0" layoutY="639.0" mnemonicParsing="false" onAction="#removeTitle" prefHeight="47.0" prefWidth="89.0" text="Title">
          <font>
             <Font size="13.0" />
-         </font></Button>
-      <Pane layoutX="101.0" prefHeight="700.0" prefWidth="887.0">
+         </font>
+      </Button>
+      <Button layoutX="8.0" layoutY="40.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="89.0" text="Add">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+      <Pane layoutX="101.0" prefHeight="700.0" prefWidth="1012.0">
          <children>
-            <TableView fx:id="bookTable" editable="true" layoutX="6.0" layoutY="41.0" prefHeight="653.0" prefWidth="948.0">
+            <TableView fx:id="bookTable" editable="true" layoutX="6.0" layoutY="41.0" prefHeight="653.0" prefWidth="1001.0">
               <columns>
                   <TableColumn fx:id="barcodeColumn" prefWidth="83.0" resizable="false" text="Barcode #" />
                   <TableColumn fx:id="titleColumn" prefWidth="296.0" resizable="false" text="Title" />
                   <TableColumn fx:id="authorColumn" prefWidth="298.0" resizable="false" text="Author" />
                   <TableColumn fx:id="availabilityColumn" prefWidth="101.0" resizable="false" text="Available" />
-                  <TableColumn fx:id="dueDateColumn" prefWidth="168.0" resizable="false" text="Due Date" />
+                  <TableColumn fx:id="dueDateColumn" prefWidth="222.0" resizable="false" text="Due Date" />
               </columns>
             </TableView>
          </children></Pane>
-      <MenuBar prefHeight="25.0" prefWidth="1066.0">
+      <MenuBar prefHeight="25.0" prefWidth="1113.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Open" />
+              <MenuItem mnemonicParsing="false" onAction="#menuOpenFile" text="Open File" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuQuitApp" text="Quit" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="About">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Github" />
-            </items>
-          </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+              <items>
+                  <MenuItem mnemonicParsing="false" onAction="#openGithub" text="Github" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
-      <Button layoutX="8.0" layoutY="511.0" mnemonicParsing="false" onAction="#removeButton" prefHeight="47.0" prefWidth="89.0" text="Remove">
+      <Button layoutX="8.0" layoutY="579.0" mnemonicParsing="false" onAction="#removeBarcode" prefHeight="47.0" prefWidth="89.0" text="Barcode">
          <font>
             <Font size="13.0" />
          </font>
       </Button>
-      <Button layoutX="8.0" layoutY="442.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="89.0" text="Add">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Button>
+      <Label layoutX="7.0" layoutY="547.0" prefHeight="17.0" prefWidth="101.0" text="Remove book by:" />
    </children>
 </Pane>
