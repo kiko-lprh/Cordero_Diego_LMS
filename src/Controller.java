@@ -6,6 +6,8 @@
  * This class controls the main buttons, populates the table view and handles text input
  */
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,20 +27,38 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Date;
 import java.util.Objects;
 
 
 public class Controller {
 
+
     Library bookstore = new Library();
+    ObservableList<Book> resultList = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
+
+        bookTable.getItems().clear();
+
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
         barcodeColumn.setCellValueFactory(new PropertyValueFactory<>("barcode"));
         availabilityColumn.setCellValueFactory(new PropertyValueFactory<>("availability"));
         dueDateColumn.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
+        volumeColumn.setCellValueFactory(new PropertyValueFactory<>("volume"));
+
+        try {
+            populateListView();
+        } catch (SQLException e) {
+            // Handle the SQLException appropriately
+            e.printStackTrace();
+        }
+
     }
 
     @FXML
@@ -60,6 +80,9 @@ public class Controller {
     private TableColumn<Book, Boolean> availabilityColumn;
 
     @FXML
+    private TableColumn<Book, Boolean> volumeColumn;
+
+    @FXML
     private Pane mainPane;
 
 
@@ -69,7 +92,7 @@ public class Controller {
      * return: n/a
      * purpose: checkIn button action controller. calls the checkIn(String) method in the Library Class
      */
-    public void checkInButton() throws IOException {
+    public void checkInButton() throws IOException, SQLException {
         String title = showTitleInputDialog("title");
         if (title != null) {
             bookstore.checkIn(title);
@@ -84,7 +107,7 @@ public class Controller {
      * return: n/a
      * purpose: checkOut button action controller. calls the checkOut(String) method in the Library Class
      */
-    public void checkOutButton() throws IOException {
+    public void checkOutButton() throws IOException, SQLException {
         String title = showTitleInputDialog("title");
         if (title != null) {
             bookstore.checkOut(title);
@@ -99,7 +122,7 @@ public class Controller {
      * return: n/a
      * purpose: remove by title button action controller. calls the removeBook(String) method in the Library Class
      */
-    public void removeTitle() throws IOException {
+    public void removeTitle() throws IOException, SQLException {
         String title = showTitleInputDialog("title");
         if (title != null) {
             bookstore.removeBook(title);
@@ -114,7 +137,7 @@ public class Controller {
      * return: n/a
      * purpose: remove by barcode button action controller. calls the removeBook(int) method in the Library Class
      */
-    public void removeBarcode() throws IOException {
+    public void removeBarcode() throws IOException, SQLException {
         int barcode;
         String title = showTitleInputDialog("barcode");
 
@@ -179,9 +202,26 @@ public class Controller {
      * return: n/a
      * purpose: populates the table with the contents book Collection
      */
-    public void populateListView() {
+    public void populateListView() throws SQLException {
+
+        String query = "SELECT  * FROM books";
+        Statement statement = bookstore.dbConn.connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+
+
+        while (resultSet.next()) {
+            String title = resultSet.getString("title");
+            String author = resultSet.getString("author");
+            int barcode = resultSet.getInt("barcode");
+            boolean availability = resultSet.getBoolean("available");
+            Date dueDate = resultSet.getDate("due date");
+            int volume = resultSet.getInt("volume");
+            resultList.add((new Book(title,author,barcode,volume,availability,dueDate)));
+        }
+
         bookTable.getItems().clear();
-        bookTable.getItems().addAll(bookstore.bookCollection);
+        bookTable.getItems().addAll(resultList);
+        resultList.clear();
     }
 
 
@@ -191,7 +231,7 @@ public class Controller {
      * return: n/a
      * purpose: controls the 'Open File' menu option. Calls the openFile method to open a file
      */
-    public void menuOpenFile() throws IOException {
+    public void menuOpenFile() throws IOException, SQLException {
         bookstore.openFile();
         populateListView();
     }

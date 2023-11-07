@@ -18,6 +18,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 import java.io.*;
@@ -25,10 +27,9 @@ import java.io.*;
 
 public class Library {
 
+    DBConnector dbConn = new DBConnector();
 
-    public Library(){
-
-    }
+    public Library(){}
 
 
     ArrayList<Book> bookCollection = new ArrayList<>();
@@ -40,8 +41,19 @@ public class Library {
      * return: n/a
      * purpose: Adds a book to the collection.
      */
-    public void addBook(String barcode, String title, String author) {
-        bookCollection.add(new Book(title, author, Integer.parseInt(barcode)));
+    public void addBook(String barcode, String title, String volume, String author) {
+
+        try {
+            String query = "INSERT INTO `books` (barcode, title, volume, author, available, `due date`) VALUES (?, ?, ?, ?, '1', NULL);";
+            PreparedStatement statement = dbConn.connection.prepareStatement(query);
+            statement.setInt(1, Integer.parseInt(barcode));
+            statement.setString(2, title);
+            statement.setString(3, volume);
+            statement.setString(4, author);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -51,18 +63,18 @@ public class Library {
      * return: n/a
      * purpose: Removes a book from the collection using the book's barcode as reference.
      */
-    public void removeBook(int barcode) throws IOException {
-        Iterator<Book> iterator = bookCollection.iterator();
+    public void removeBook(int barcode) throws IOException, SQLException {
 
-        while (iterator.hasNext()) {
-            Book book = iterator.next();
-            if (book.getBarcode() == barcode) {
-                iterator.remove();
-                successAlert("Book successfully deleted.");
-                return;
+            String query = "DELETE FROM books WHERE barcode = '" + barcode + "'";
+            Statement statement = dbConn.connection.createStatement();
+            int rowsAffected = statement.executeUpdate(query);
+
+            if (rowsAffected == 0) {
+                errorAlert("Book could not be found.");
             }
-        }
-        errorAlert("Book could not be found.");
+            else {
+                successAlert("Book successfully deleted.");
+            }
     }
 
 
@@ -97,7 +109,7 @@ public class Library {
         }
         else if (bookCount > 1) {
 
-            multipleBooks("in",true,tempBookList,null,true);
+            multipleBooks("in",true,tempBookList,null,true,title);
 
         }
         else {
@@ -115,7 +127,6 @@ public class Library {
      * Sends the book information to addBook() so that it can be added to the collection.
      */
     public void openFile () throws IOException {
-        bookCollection.clear();
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Text Files", "*.txt"),
@@ -133,10 +144,10 @@ public class Library {
 
                 while ((line = read.readLine()) != null) {
                     String[] tempArray = line.split(",");
-                    addBook(tempArray[0], tempArray[1], tempArray[2]);
+                    addBook(tempArray[0], tempArray[1], tempArray[2], tempArray[3]);
                 }
                 read.close();
-                successAlert("File successfully opened.");
+                successAlert("Books Added Successfully.");
                 return;
             } catch (IOException e) {
                 System.out.println("Error opening file");
@@ -153,21 +164,21 @@ public class Library {
      * return: n/a
      * purpose: Checks a book back in after it has been checked out. Displays an "error" if book is already checked in.
      */
-    public void checkIn (String title) throws IOException {
+    public void checkIn (String title) throws IOException, SQLException {
 
         int count = 0;
         ArrayList<Book> tempBookList = new ArrayList<>();
 
-        count = searchCollection(title,count,tempBookList,"in");
+        count = searchCollection(title,"in");
 
         if (count == 1){
 
-            singleBook(title,"in",true,null);
+            singleBook(title,"in", null);
 
         }
         else if (count > 1) {
 
-            multipleBooks("in",true,tempBookList,null,false);
+            multipleBooks("in",true,tempBookList,null,false,title);
 
         }
         else {
@@ -183,21 +194,21 @@ public class Library {
      * return: n/a
      * purpose: Checks an available book out. Displays an "error" if book can't be checked out.
      */
-    public void checkOut (String title) throws IOException {
+    public void checkOut (String title) throws IOException, SQLException {
 
 
         ArrayList<Book> tempBookList = new ArrayList<>();
         int count = 0;
 
-        count = searchCollection(title,count,tempBookList,"out");
+        count = searchCollection(title,"out");
 
         if (count == 1) {
 
-            singleBook(title,"out",false,LocalDate.now().plusMonths(1));
+            singleBook(title,"out", LocalDate.now().plusMonths(1));
 
         }
         else if (count > 1) {
-            multipleBooks("out",false,tempBookList,LocalDate.now().plusMonths(1),false);
+            multipleBooks("out",false,tempBookList,LocalDate.now().plusMonths(1),false, title);
 
         }
         else {
@@ -214,61 +225,122 @@ public class Library {
      * and due date of the book according to whether it is being checked in or out. If delete is true deletes book instead
      * of checking it in/out
      */
-    public void multipleBooks(String either, Boolean available, ArrayList<Book> tempBookList, LocalDate date, Boolean delete) throws IOException {
+    public void multipleBooks(String either, Boolean available, ArrayList<Book> tempBookList, LocalDate date, Boolean delete, String searchTitle) throws IOException {
         try {
+
+            String query;
             Stage multipleBooksStage = new Stage();
             multipleBooksStage.initModality(Modality.APPLICATION_MODAL);
 
             if (delete){
                 multipleBooksStage.setTitle("Select book to delete");
+                query = "SELECT  * FROM books WHERE title = '" + searchTitle + "'";
             }else {
                 multipleBooksStage.setTitle("Select book to check " + either);
+                if (either.equals("in")){
+                    query = "SELECT  * FROM books WHERE title = '" + searchTitle + "' AND available = false";
+                }
+                else {
+                    query = "SELECT  * FROM books WHERE title = '" + searchTitle + "' AND available = true";
+                }
             }
 
 
+            Statement statement = dbConn.connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("fxmlVisuals/multipleBooks.fxml")));
             Scene scene = new Scene(root);
-
             multipleBooksStage.setScene(scene);
             multipleBooksStage.setResizable(false);
             multipleBooksStage.getIcons().add(new Image("img/icon.png"));
-
             ListView<String> listView = (ListView<String>) scene.lookup("#multipleBooksListView");
             Button submitButton = (Button) scene.lookup("#multipleBooksButton");
-
             ObservableList<String> items = FXCollections.observableArrayList();
+
+
+
+            while (resultSet.next()) {
+                String title = resultSet.getString("title");
+                String author = resultSet.getString("author");
+                int barcode = resultSet.getInt("barcode");
+                boolean availability = resultSet.getBoolean("available");
+                java.util.Date dueDate = resultSet.getDate("due date");
+                int volume = resultSet.getInt("volume");
+                tempBookList.add((new Book(title,author,barcode,volume,availability,dueDate)));
+            }
 
             for (Book book : tempBookList) {
                 items.add(book.toString());
             }
 
+
             listView.setItems(items);
+
+
 
             submitButton.setOnAction(e -> {
                 int index = listView.getSelectionModel().getSelectedIndex();
                 if (index != -1) {
                     int barcodeNum = tempBookList.get(index).getBarcode();
-                    ArrayList<Book> bookToRemove = new ArrayList<>();
-                    for (Book book : bookCollection) {
-                        if (book.getBarcode() == barcodeNum) {
-                            if (delete) {
-                                bookToRemove.add(book);
+                    try {
+                        if (delete) {
+                            // Delete the book from the database
+                            try (PreparedStatement deleteStatement = dbConn.connection.prepareStatement("DELETE FROM books WHERE barcode = ?")) {
+                                deleteStatement.setInt(1, barcodeNum);
+                                deleteStatement.executeUpdate();
+                            }
+                        } else {
+                            if (either.equals("in")) {
+                                // Update the book as available in the database
+                                try (PreparedStatement updateStatement = dbConn.connection.prepareStatement("UPDATE books SET available = true, `due date` = NULL WHERE barcode = ?")) {
+                                    updateStatement.setInt(1, barcodeNum);
+                                    updateStatement.executeUpdate();
+                                }
                             } else {
-                                book.setAvailability(available);
-                                book.setDueDate(date);
+                                // Update the book as checked out in the database
+                                try (PreparedStatement updateStatement = dbConn.connection.prepareStatement("UPDATE books SET available = false, `due date` = ? WHERE barcode = ?")) {
+                                    updateStatement.setDate(1, Date.valueOf(date));
+                                    updateStatement.setInt(2, barcodeNum);
+                                    updateStatement.executeUpdate();
+                                }
                             }
                         }
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
                     }
-                    bookCollection.removeAll(bookToRemove);
                     multipleBooksStage.close();
+                    if (delete){
+                        try {
+                            successAlert("Book successfully deleted.");
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }else {
+                        try {
+                            successAlert("Book successfully checked " + either + ".");
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
                 }
             });
+
+            multipleBooksStage.setOnCloseRequest(event -> {
+                int index = listView.getSelectionModel().getSelectedIndex();
+                if (index == -1) {
+                    try {
+                        errorAlert("Please select a book from the list.");
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+
             multipleBooksStage.showAndWait();
-            if (delete){
-                successAlert("Book successfully deleted.");
-            }else {
-                successAlert("Book successfully checked " + either + ".");
-            }
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -289,16 +361,27 @@ public class Library {
      * purpose: If the searchCollection method only finds one book, this method is called. It changes the availability
      * and due date of the book according to whether it is being checked in or out.
      */
-    public void singleBook(String title, String either, Boolean available, LocalDate date) throws IOException {
-        for (Book book : bookCollection) {
-            if (book.getTitle().equals(title)) {
-                if ((either.equals("in") && !book.getAvailability()) || (either.equals("out") && book.getAvailability())) {
-                    book.setAvailability(available);
-                    book.setDueDate(date);
-                }
+    public void singleBook(String title, String either, LocalDate date) throws IOException {
+        try {
+            String query;
+            if (either.equals("in")) {
+                query = "UPDATE books SET available = true, `due date` = NULL WHERE title = ?";
+            } else {
+                query = "UPDATE books SET available = false, `due date` = ? WHERE title = ?";
             }
+            PreparedStatement statement = dbConn.connection.prepareStatement(query);
+            if (!either.equals("in")) {
+                statement.setDate(1, Date.valueOf(date));
+                statement.setString(2, title);
+            } else {
+                statement.setString(1, title);
+            }
+            statement.executeUpdate();
+            successAlert("Book successfully checked " + either + ".");
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            errorAlert("Book could not be checked " + either + ".");
         }
-        successAlert("Book successfully checked " + either +  ".");
     }
 
 
@@ -309,14 +392,23 @@ public class Library {
      * purpose: Searches to see if there are multiple books with the same name and availability status. Returns the
      * number of books that meet the criteria.
      */
-    public int searchCollection(String title, int count, ArrayList<Book> tempBookList, String either){
-        for (Book book : bookCollection){
-            if (book.getTitle().equals(title)){
-                if ((either.equals("in") && !book.getAvailability()) || (either.equals("out") && book.getAvailability())) {
-                    tempBookList.add(book);
-                    count += 1;
-                }
-            }
+    public int searchCollection(String title, String either) throws SQLException {
+        String sql;
+        if (either.equals("in")) {
+            sql = "SELECT COUNT(*) AS Matches FROM books WHERE title = ? AND available = false";
+        } else if (either.equals("out")) {
+            sql = "SELECT COUNT(*) AS Matches FROM books WHERE title = ? AND available = true";
+        } else {
+            throw new IllegalArgumentException("Invalid value for 'either' parameter. Please use 'in' or 'out'.");
+        }
+
+        PreparedStatement statement = dbConn.connection.prepareStatement(sql);
+        statement.setString(1, title);
+        ResultSet resultSet = statement.executeQuery();
+
+        int count = 0;
+        if (resultSet.next()) {
+            count = resultSet.getInt("Matches");
         }
         return count;
     }

@@ -36,9 +36,10 @@
               <columns>
                   <TableColumn fx:id="barcodeColumn" prefWidth="83.0" resizable="false" text="Barcode #" />
                   <TableColumn fx:id="titleColumn" prefWidth="296.0" resizable="false" text="Title" />
-                  <TableColumn fx:id="authorColumn" prefWidth="298.0" resizable="false" text="Author" />
-                  <TableColumn fx:id="availabilityColumn" prefWidth="101.0" resizable="false" text="Available" />
-                  <TableColumn fx:id="dueDateColumn" prefWidth="222.0" resizable="false" text="Due Date" />
+                  <TableColumn fx:id="volumeColumn" prefWidth="60.0" text="Volume" />
+                  <TableColumn fx:id="authorColumn" prefWidth="248.0" resizable="false" text="Author" />
+                  <TableColumn fx:id="availabilityColumn" prefWidth="82.0" resizable="false" text="Available" />
+                  <TableColumn fx:id="dueDateColumn" prefWidth="231.0" resizable="false" text="Due Date" />
               </columns>
             </TableView>
          </children></Pane>

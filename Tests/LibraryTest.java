@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -48,10 +49,10 @@ class LibraryTest {
 
 
     @org.junit.jupiter.api.Test
-    void removeBookByBarcode() throws IOException {
+    void removeBookByBarcode() throws IOException, SQLException {
 
         //Add book to the library collection
-        testLibrary.addBook("1101","Book 1", "Diego Cordero");
+        testLibrary.addBook("1101","Book 1", "1","Diego Cordero");
 
         //Remove the book using its barcode
         testLibrary.removeBook(1101);

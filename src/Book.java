@@ -8,6 +8,7 @@
  */
 
 import java.time.LocalDate;
+import java.util.Date;
 
 public class Book {
 
@@ -16,14 +17,16 @@ public class Book {
     int barcode;
     String dueDate; // Null by default
     Boolean availability; // if true book is checked in
+    int volume;
 
 
-    public Book (String title, String author, int barcode){
+    public Book (String title, String author, int barcode, int volume, boolean availability, Date dueDate){
         this.title = title;
         this.author = author;
         this.barcode = barcode;
-        dueDate = "null";
-        availability = true;
+        this.dueDate = String.valueOf(dueDate);
+        this.availability = availability;
+        this.volume = volume;
     }
 
 
@@ -77,6 +80,15 @@ public class Book {
     }
 
 
+    public int getVolume() {
+        return volume;
+    }
+
+    public void setVolume(int volume) {
+        this.volume = volume;
+    }
+
+
     /**
      * method: toString()
      * parameters: n/a
@@ -85,7 +97,7 @@ public class Book {
      */
     @Override
     public String toString() {
-        return "Barcode #: " + barcode + ", " + "Title: " + title + ", " + "Author: " + author + ", "
+        return "Barcode #: " + barcode + ", " + "Title: " + title + ", " + "Volume: " + volume + ", " + "Author: " + author + ", "
                 + "Due Date: " +  dueDate + ", " + "Available: " + availability;
     }
 }
