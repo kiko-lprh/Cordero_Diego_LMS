@@ -142,13 +142,12 @@ public class Library {
                 BufferedReader read = new BufferedReader(new FileReader(chosenFile));
                 String line;
 
-
+                // while loop built like this so it doesn't stop when it encounters a blank line
                 while ((line = read.readLine()) != null) {
-                    if(line.isEmpty()){
-                        break;     // to skip over any empty lines
+                    if(!line.isEmpty()){
+                        String[] tempArray = line.split(",");
+                        addBook(tempArray[0], tempArray[1], tempArray[2], tempArray[3]);
                     }
-                    String[] tempArray = line.split(",");
-                    addBook(tempArray[0], tempArray[1], tempArray[2], tempArray[3]);
                 }
                 read.close();
                 successAlert("Books Added Successfully.");
