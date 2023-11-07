@@ -86,36 +86,37 @@ public class Library {
      * books with the same title, prompts the user to select the specific book to be deleted.
      */
     public void removeBook(String title) throws IOException {
-        Iterator<Book> iterator = bookCollection.iterator();
         ArrayList<Book> tempBookList = new ArrayList<>();
-        int bookCount = 0;
-
-        for (Book book : bookCollection) {
-            if (book.getTitle().equals(title)) {
-                tempBookList.add(book);
-                bookCount += 1;
+        try {
+            String checkQuery = "SELECT COUNT(*) AS Matches FROM books WHERE title = ?";
+            PreparedStatement checkStatement = dbConn.connection.prepareStatement(checkQuery);
+            checkStatement.setString(1, title);
+            ResultSet resultSet = checkStatement.executeQuery();
+            int bookCount = 0;
+            if (resultSet.next()) {
+                bookCount = resultSet.getInt("Matches");
             }
-        }
 
-        if (bookCount == 1){
-            while (iterator.hasNext()) {
-                Book book = iterator.next();
-                if (book.getTitle().equals(title)) {
-                    iterator.remove();
+            if (bookCount == 1) {
+                String deleteQuery = "DELETE FROM books WHERE title = ?";
+                PreparedStatement deleteStatement = dbConn.connection.prepareStatement(deleteQuery);
+                deleteStatement.setString(1, title);
+                int rowsAffected = deleteStatement.executeUpdate();
+
+                if (rowsAffected == 0) {
+                    errorAlert("Book could not be found.");
+                } else {
                     successAlert("Book successfully deleted.");
-                    return;
                 }
+            } else if (bookCount > 1) {
+                multipleBooks("delete", tempBookList, null, true, title);
+            } else {
+                errorAlert("Book could not be found.");
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            errorAlert("An error occurred while removing the book.");
         }
-        else if (bookCount > 1) {
-
-            multipleBooks("in",true,tempBookList,null,true,title);
-
-        }
-        else {
-            errorAlert("Book could not be found.");
-        }
-
     }
 
 
@@ -143,6 +144,9 @@ public class Library {
 
 
                 while ((line = read.readLine()) != null) {
+                    if(line.isEmpty()){
+                        break;     // to skip over any empty lines
+                    }
                     String[] tempArray = line.split(",");
                     addBook(tempArray[0], tempArray[1], tempArray[2], tempArray[3]);
                 }
@@ -178,7 +182,7 @@ public class Library {
         }
         else if (count > 1) {
 
-            multipleBooks("in",true,tempBookList,null,false,title);
+            multipleBooks("in", tempBookList,null,false,title);
 
         }
         else {
@@ -208,7 +212,7 @@ public class Library {
 
         }
         else if (count > 1) {
-            multipleBooks("out",false,tempBookList,LocalDate.now().plusMonths(1),false, title);
+            multipleBooks("out", tempBookList,LocalDate.now().plusMonths(1),false, title);
 
         }
         else {
@@ -225,7 +229,7 @@ public class Library {
      * and due date of the book according to whether it is being checked in or out. If delete is true deletes book instead
      * of checking it in/out
      */
-    public void multipleBooks(String either, Boolean available, ArrayList<Book> tempBookList, LocalDate date, Boolean delete, String searchTitle) throws IOException {
+    public void multipleBooks(String either, ArrayList<Book> tempBookList, LocalDate date, Boolean delete, String searchTitle) throws IOException {
         try {
 
             String query;
