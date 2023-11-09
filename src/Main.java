@@ -1,9 +1,9 @@
 /**
  * Diego Cordero
  * CEN 3024 - Software Development 1
- * October 26, 2023.
+ * November 9, 2023.
  * Main.java
- * This class loads the LMS's GUI.
+ * This class handles the LMS's GUI and launches the app.
  */
 
 import javafx.application.Application;
@@ -24,7 +24,7 @@ public class Main extends Application {
      * method: start()
      * parameters: String[] args
      * return: n/a
-     * purpose: Main Stage.
+     * purpose: Sets the Main Stage.
      */
     public void start(Stage mainStage){
         try{

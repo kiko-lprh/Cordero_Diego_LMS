@@ -1,3 +1,11 @@
+/**
+ * Diego Cordero
+ * CEN 3024 - Software Development 1
+ * November 9, 2023.
+ * DBConnector.java
+ * This class handles the connection between the database and the program.
+ */
+
 import java.sql.*;
 
 public class DBConnector {
@@ -9,17 +17,10 @@ public class DBConnector {
 
     public DBConnector() {
         try {
-
             connection = DriverManager.getConnection(url, username, password);
-            System.out.println("Connection Successful");
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public void close() throws SQLException {
-        connection.close();
     }
 
 }

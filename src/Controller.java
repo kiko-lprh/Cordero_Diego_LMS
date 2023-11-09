@@ -1,14 +1,13 @@
 /**
  * Diego Cordero
  * CEN 3024 - Software Development 1
- * October 26, 2023.
+ * November 9, 2023.
  * Controller.java
- * This class controls the main buttons, populates the table view and handles text input
+ * This class controls the main buttons, populates the table view and handles text input.
  */
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -90,12 +89,12 @@ public class Controller {
      * method: checkInButton()
      * parameters: n/a
      * return: n/a
-     * purpose: checkIn button action controller. calls the checkIn(String) method in the Library Class
+     * purpose: checkIn button action controller. Calls the checkIn(String) method in the Library Class.
      */
     public void checkInButton() throws IOException, SQLException {
         String title = showTitleInputDialog("title");
         if (title != null) {
-            bookstore.checkIn(title);
+            bookstore.manageBook(title,"in");
             populateListView();
         }
     }
@@ -105,12 +104,12 @@ public class Controller {
      * method: checkOutButton()
      * parameters: n/a
      * return: n/a
-     * purpose: checkOut button action controller. calls the checkOut(String) method in the Library Class
+     * purpose: checkOut button action controller. Calls the checkOut(String) method in the Library Class.
      */
     public void checkOutButton() throws IOException, SQLException {
         String title = showTitleInputDialog("title");
         if (title != null) {
-            bookstore.checkOut(title);
+            bookstore.manageBook(title,"out");
             populateListView();
         }
     }
@@ -120,7 +119,7 @@ public class Controller {
      * method: removeTitle()
      * parameters: n/a
      * return: n/a
-     * purpose: remove by title button action controller. calls the removeBook(String) method in the Library Class
+     * purpose: Remove by title button action controller. Calls the removeBook(String) method in the Library Class.
      */
     public void removeTitle() throws IOException, SQLException {
         String title = showTitleInputDialog("title");
@@ -135,7 +134,7 @@ public class Controller {
      * method: removeBarcode()
      * parameters: n/a
      * return: n/a
-     * purpose: remove by barcode button action controller. calls the removeBook(int) method in the Library Class
+     * purpose: Remove by barcode button action controller. Calls the removeBook(int) method in the Library Class.
      */
     public void removeBarcode() throws IOException, SQLException {
         int barcode;
@@ -155,7 +154,7 @@ public class Controller {
 
     /**
      * method: showTitleInputDialog()
-     * parameters: n/a
+     * parameters: String either
      * return: String
      * purpose: Creates an input stage, prompts user to enter a title/barcode into a TextField and then returns
      * the inputted title/barcode.
@@ -200,7 +199,7 @@ public class Controller {
      * method: populateListView()
      * parameters: n/a
      * return: n/a
-     * purpose: populates the table with the contents book Collection
+     * purpose: populates the table with the contents of the connected database.
      */
     public void populateListView() throws SQLException {
 
@@ -229,7 +228,7 @@ public class Controller {
      * method: menuOpenFile()
      * parameters: n/a
      * return: n/a
-     * purpose: controls the 'Open File' menu option. Calls the openFile method to open a file
+     * purpose: controls the 'Open File' menu option. Calls the openFile method to open a file.
      */
     public void menuOpenFile() throws IOException, SQLException {
         bookstore.openFile();
@@ -241,7 +240,7 @@ public class Controller {
      * method: menuQuitApp()
      * parameters: n/a
      * return: n/a
-     * purpose: controls the "Quit" menu option; closes the app.
+     * purpose: controls the "Quit" menu option; Closes the app.
      */
     public void menuQuitApp() {
         Stage stage = (Stage) mainPane.getScene().getWindow();

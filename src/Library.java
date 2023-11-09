@@ -37,9 +37,9 @@ public class Library {
 
     /**
      * method: addBook()
-     * parameters: String barcode, String title, String author
+     * parameters: String barcode, String title, String author, String volume
      * return: n/a
-     * purpose: Adds a book to the collection.
+     * purpose: Adds a book to the database from a file.
      */
     public void addBook(String barcode, String title, String volume, String author) {
 
@@ -61,7 +61,7 @@ public class Library {
      * method: removeBook(int)
      * parameters: int barcode
      * return: n/a
-     * purpose: Removes a book from the collection using the book's barcode as reference.
+     * purpose: Removes a book from the database using the book's barcode as reference.
      */
     public void removeBook(int barcode) throws IOException, SQLException {
 
@@ -82,7 +82,7 @@ public class Library {
      * method: removeBook(String)
      * parameters: String title
      * return: n/a
-     * purpose: Removes books from the collection that have the inputted title, if there are multiple
+     * purpose: Removes a book from the database that has the inputted title, if there are multiple
      * books with the same title, prompts the user to select the specific book to be deleted.
      */
     public void removeBook(String title) throws IOException {
@@ -125,7 +125,8 @@ public class Library {
      * parameters: String filePath
      * return: n/a
      * purpose: Opens and reads the chosen file from the FileChooser.
-     * Sends the book information to addBook() so that it can be added to the collection.
+     * If the file contains valid books, sends the books' information to addBook()
+     * so that they can be added to the collection.
      */
     public void openFile () throws IOException {
         FileChooser fileChooser = new FileChooser();
@@ -162,60 +163,37 @@ public class Library {
 
 
     /**
-     * method: checkIn()
-     * parameters: String title
+     * method: manageBook()
+     * parameters: String title, String either
      * return: n/a
-     * purpose: Checks a book back in after it has been checked out. Displays an "error" if book is already checked in.
+     * purpose: Sends the book to be either checked in or out. If more than one book is found, the multipleBooks()
+     * method is called. If only one book is found, the singleBook() method is called.
      */
-    public void checkIn (String title) throws IOException, SQLException {
+    public void manageBook(String title, String either) throws IOException, SQLException {
 
         int count = 0;
         ArrayList<Book> tempBookList = new ArrayList<>();
 
-        count = searchCollection(title,"in");
-
-        if (count == 1){
-
-            singleBook(title,"in", null);
-
-        }
-        else if (count > 1) {
-
-            multipleBooks("in", tempBookList,null,false,title);
-
-        }
-        else {
-            errorAlert("Book not found.");
-        }
-
-    }
-
-
-    /**
-     * method: checkOut()
-     * parameters: String title
-     * return: n/a
-     * purpose: Checks an available book out. Displays an "error" if book can't be checked out.
-     */
-    public void checkOut (String title) throws IOException, SQLException {
-
-
-        ArrayList<Book> tempBookList = new ArrayList<>();
-        int count = 0;
-
-        count = searchCollection(title,"out");
-
-        if (count == 1) {
-
-            singleBook(title,"out", LocalDate.now().plusMonths(1));
-
-        }
-        else if (count > 1) {
-            multipleBooks("out", tempBookList,LocalDate.now().plusMonths(1),false, title);
-
-        }
-        else {
-            errorAlert("Book not found.");
+        if (either.equals("in")) {
+            count = searchCollection(title, "in");
+            if (count == 1) {
+                singleBook(title, "in", null);
+            } else if (count > 1) {
+                multipleBooks("in", tempBookList, null, false, title);
+            } else {
+                errorAlert("Book not found.");
+            }
+        } else if (either.equals("out")) {
+            count = searchCollection(title, "out");
+            if (count == 1) {
+                singleBook(title, "out", LocalDate.now().plusMonths(1));
+            } else if (count > 1) {
+                multipleBooks("out", tempBookList, LocalDate.now().plusMonths(1), false, title);
+            } else {
+                errorAlert("Book not found.");
+            }
+        } else {
+            errorAlert("Invalid operation type.");
         }
     }
 
@@ -224,13 +202,14 @@ public class Library {
      * method: multipleBooks()
      * parameters: Scanner scan, String either, Boolean available, ArrayList<Book> tempBookList, LocalDate date, Boolean delete
      * return: n/a
-     * purpose: If the searchCollection method finds multiple books, this method is called. It changes the availability
+     * purpose: If the searchCollection() method finds multiple books, this method is called. It changes the availability
      * and due date of the book according to whether it is being checked in or out. If delete is true deletes book instead
      * of checking it in/out
      */
     public void multipleBooks(String either, ArrayList<Book> tempBookList, LocalDate date, Boolean delete, String searchTitle) throws IOException {
         try {
 
+            // -- Setting up the stage -- //
             String query;
             Stage multipleBooksStage = new Stage();
             multipleBooksStage.initModality(Modality.APPLICATION_MODAL);
@@ -248,10 +227,8 @@ public class Library {
                 }
             }
 
-
             Statement statement = dbConn.connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("fxmlVisuals/multipleBooks.fxml")));
             Scene scene = new Scene(root);
             multipleBooksStage.setScene(scene);
@@ -260,7 +237,6 @@ public class Library {
             ListView<String> listView = (ListView<String>) scene.lookup("#multipleBooksListView");
             Button submitButton = (Button) scene.lookup("#multipleBooksButton");
             ObservableList<String> items = FXCollections.observableArrayList();
-
 
 
             while (resultSet.next()) {
@@ -281,7 +257,7 @@ public class Library {
             listView.setItems(items);
 
 
-
+            // -- SUBMIT BUTTON ACTION LISTENER -- //
             submitButton.setOnAction(e -> {
                 int index = listView.getSelectionModel().getSelectedIndex();
                 if (index != -1) {
@@ -313,6 +289,7 @@ public class Library {
                         ex.printStackTrace();
                     }
                     multipleBooksStage.close();
+
                     if (delete){
                         try {
                             successAlert("Book successfully deleted.");
@@ -329,6 +306,7 @@ public class Library {
                 }
             });
 
+            // -- SCENE CLOSING ACTION LISTENER TO DISPLAY ERROR -- //
             multipleBooksStage.setOnCloseRequest(event -> {
                 int index = listView.getSelectionModel().getSelectedIndex();
                 if (index == -1) {
@@ -339,20 +317,15 @@ public class Library {
                     }
                 }
             });
-
             multipleBooksStage.showAndWait();
-
-
 
         } catch (Exception e) {
             e.printStackTrace();
-
             if (delete){
                 errorAlert("Book could not be deleted.");
             }else {
                 errorAlert("Book could not be checked " + either + ".");
             }
-
         }
     }
 
@@ -392,7 +365,7 @@ public class Library {
      * method: searchCollection
      * parameters: String title, int count, ArrayList<Book> tempBookList, String either
      * return: int count
-     * purpose: Searches to see if there are multiple books with the same name and availability status. Returns the
+     * purpose: Queries the database to see if there are multiple books with the same name and availability status. Returns the
      * number of books that meet the criteria.
      */
     public int searchCollection(String title, String either) throws SQLException {
@@ -421,7 +394,7 @@ public class Library {
      * method: successAlert()
      * parameters: n/a
      * return: n/a
-     * purpose: calls the createAndShowAlert method to create a Success Alert
+     * purpose: calls the createAndShowAlert method to create a success alert using the message parameter.
      */
     public void successAlert(String message) throws IOException {
         createAndShowAlert("Success", "fxmlVisuals/success.fxml", message);
@@ -432,7 +405,7 @@ public class Library {
      * method: errorAlert()
      * parameters: n/a
      * return: n/a
-     * purpose: calls the createAndShowAlert method to create an Error Alert
+     * purpose: calls the createAndShowAlert method to create an error alert using the message parameter.
      */
     public void errorAlert(String message) throws IOException {
         createAndShowAlert("Error", "fxmlVisuals/error.fxml", message);
@@ -443,7 +416,7 @@ public class Library {
      * method: createAndShowAlert()
      * parameters: String title, String path
      * return: n/a
-     * purpose: creates a new error or success alert
+     * purpose: creates a new error or success alert depending on which method calls it.
      */
     private void createAndShowAlert(String title, String path, String message) throws IOException {
         Stage stage = new Stage();
