@@ -1,7 +1,7 @@
 /**
  * Diego Cordero
  * CEN 3024 - Software Development 1
- * October 26, 2023.
+ * November 9, 2023.
  * Library.java
  * This class manages the book collection within the book management system. It takes care of
  * adding, removing, checkin in and checking out books.
