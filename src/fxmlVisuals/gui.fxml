@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="mainPane" prefHeight="700.0" prefWidth="1113.0" stylesheets="/css/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<Pane fx:id="mainPane" prefHeight="700.0" prefWidth="1113.0" stylesheets="/css/styles.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
    <children>
       <Button layoutX="8.0" layoutY="97.0" mnemonicParsing="false" onAction="#checkInButton" prefHeight="47.0" prefWidth="89.0" text="Check-In">
          <font>
@@ -36,10 +36,10 @@
               <columns>
                   <TableColumn fx:id="barcodeColumn" prefWidth="83.0" resizable="false" text="Barcode #" />
                   <TableColumn fx:id="titleColumn" prefWidth="296.0" resizable="false" text="Title" />
-                  <TableColumn fx:id="volumeColumn" prefWidth="60.0" text="Volume" />
-                  <TableColumn fx:id="authorColumn" prefWidth="248.0" resizable="false" text="Author" />
-                  <TableColumn fx:id="availabilityColumn" prefWidth="82.0" resizable="false" text="Available" />
-                  <TableColumn fx:id="dueDateColumn" prefWidth="231.0" resizable="false" text="Due Date" />
+                  <TableColumn fx:id="volumeColumn" prefWidth="88.6666259765625" text="Volume" />
+                  <TableColumn fx:id="authorColumn" prefWidth="239.3333740234375" resizable="false" text="Author" />
+                  <TableColumn fx:id="availabilityColumn" prefWidth="77.0" resizable="false" text="Available" />
+                  <TableColumn fx:id="dueDateColumn" prefWidth="216.33331298828125" resizable="false" text="Due Date" />
               </columns>
             </TableView>
          </children></Pane>
