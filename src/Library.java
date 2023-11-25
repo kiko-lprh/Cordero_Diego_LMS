@@ -1,10 +1,12 @@
 /**
- * Diego Cordero
- * CEN 3024 - Software Development 1
- * November 9, 2023.
  * Library.java
- * This class manages the book collection within the book management system. It takes care of
+ * This class manages the Library's book collection. It takes care of
  * adding, removing, checkin in and checking out books.
+ *
+ * @author Diego Cordero
+ * @version 1.0 Final
+ * @date November 25, 2023.
+ * @course CEN 3024 - Software Development 1
  */
 
 import javafx.collections.FXCollections;
@@ -25,6 +27,9 @@ import java.util.*;
 import java.io.*;
 
 
+/**
+ * Performs the main LMS functions.
+ */
 public class Library {
 
     DBConnector dbConn = new DBConnector();
@@ -36,10 +41,12 @@ public class Library {
 
 
     /**
-     * method: addBook()
-     * parameters: String barcode, String title, String author, String volume
-     * return: n/a
-     * purpose: Adds a book to the database from a file.
+     * Adds a book to the database from a file.
+     *
+     * @param barcode The barcode of the book.
+     * @param title   The title of the book.
+     * @param volume  The volume of the book.
+     * @param author  The author of the book.
      */
     public void addBook(String barcode, String title, String volume, String author) {
 
@@ -58,10 +65,11 @@ public class Library {
 
 
     /**
-     * method: removeBook(int)
-     * parameters: int barcode
-     * return: n/a
-     * purpose: Removes a book from the database using the book's barcode as reference.
+     * Removes a book from the database using the book's barcode as reference.
+     *
+     * @param barcode The barcode of the book.
+     * @throws IOException  If an I/O error occurs.
+     * @throws SQLException If a SQL error occurs.
      */
     public void removeBook(int barcode) throws IOException, SQLException {
 
@@ -79,11 +87,11 @@ public class Library {
 
 
     /**
-     * method: removeBook(String)
-     * parameters: String title
-     * return: n/a
-     * purpose: Removes a book from the database that has the inputted title, if there are multiple
-     * books with the same title, prompts the user to select the specific book to be deleted.
+     * Removes a book from the database that has the inputted title.
+     * If there are multiple books with the same title, prompts the user to select the specific book to be deleted.
+     *
+     * @param title The title of the book.
+     * @throws IOException If an I/O error occurs.
      */
     public void removeBook(String title) throws IOException {
         ArrayList<Book> tempBookList = new ArrayList<>();
@@ -121,12 +129,11 @@ public class Library {
 
 
     /**
-     * method: openFile()
-     * parameters: String filePath
-     * return: n/a
-     * purpose: Opens and reads the chosen file from the FileChooser.
+     * Opens and reads the chosen file from the FileChooser.
      * If the file contains valid books, sends the books' information to addBook()
      * so that they can be added to the collection.
+     *
+     * @throws IOException If an I/O error occurs.
      */
     public void openFile () throws IOException {
         FileChooser fileChooser = new FileChooser();
@@ -143,7 +150,7 @@ public class Library {
                 BufferedReader read = new BufferedReader(new FileReader(chosenFile));
                 String line;
 
-                // while loop built like this so it doesn't stop when it encounters a blank line
+                // while loop built like this, so it doesn't stop when it encounters a blank line
                 while ((line = read.readLine()) != null) {
                     if(!line.isEmpty()){
                         String[] tempArray = line.split(",");
@@ -163,11 +170,14 @@ public class Library {
 
 
     /**
-     * method: manageBook()
-     * parameters: String title, String either
-     * return: n/a
-     * purpose: Sends the book to be either checked in or out. If more than one book is found, the multipleBooks()
-     * method is called. If only one book is found, the singleBook() method is called.
+     * Sends the book to be either checked in or out.
+     * If more than one book is found, the multipleBooks() method is called.
+     * If only one book is found, the singleBook() method is called.
+     *
+     * @param title  The title of the book.
+     * @param either Either "in" or "out" as a String.
+     * @throws IOException  If an I/O error occurs.
+     * @throws SQLException If a SQL error occurs.
      */
     public void manageBook(String title, String either) throws IOException, SQLException {
 
@@ -199,12 +209,16 @@ public class Library {
 
 
     /**
-     * method: multipleBooks()
-     * parameters: Scanner scan, String either, Boolean available, ArrayList<Book> tempBookList, LocalDate date, Boolean delete
-     * return: n/a
-     * purpose: If the searchCollection() method finds multiple books, this method is called. It changes the availability
-     * and due date of the book according to whether it is being checked in or out. If delete is true deletes book instead
-     * of checking it in/out
+     * If the searchCollection() method finds multiple books, this method is called.
+     * It changes the availability and due date of the book according to whether it is being checked in or out.
+     * If delete is true, it deletes the book instead of checking it in/out.
+     *
+     * @param either       Either "in" or "out" as a String.
+     * @param tempBookList An ArrayList containing Book objects.
+     * @param date         The LocalDate representing the due date for checking out a book (null for checking in).
+     * @param delete       A Boolean indicating whether to delete the book.
+     * @param searchTitle  The title of the book to be modified or deleted.
+     * @throws IOException If an I/O error occurs.
      */
     public void multipleBooks(String either, ArrayList<Book> tempBookList, LocalDate date, Boolean delete, String searchTitle) throws IOException {
         try {
@@ -331,11 +345,13 @@ public class Library {
 
 
     /**
-     * method: singleBook()
-     * parameters: String title, String either, Boolean available, LocalDate date
-     * return: n/a
-     * purpose: If the searchCollection method only finds one book, this method is called. It changes the availability
-     * and due date of the book according to whether it is being checked in or out.
+     * If the searchCollection method only finds one book, this method is called.
+     * It changes the availability and due date of the book according to whether it is being checked in or out.
+     *
+     * @param title  The title of the book to be modified.
+     * @param either Either "in" or "out" as a String.
+     * @param date   The LocalDate representing the due date for checking out a book (null for checking in).
+     * @throws IOException If an I/O error occurs.
      */
     public void singleBook(String title, String either, LocalDate date) throws IOException {
         try {
@@ -362,11 +378,13 @@ public class Library {
 
 
     /**
-     * method: searchCollection
-     * parameters: String title, int count, ArrayList<Book> tempBookList, String either
-     * return: int count
-     * purpose: Queries the database to see if there are multiple books with the same name and availability status. Returns the
-     * number of books that meet the criteria.
+     * Queries the database to see if there are multiple books with the same name and availability status.
+     * Returns the number of books that meet the criteria.
+     *
+     * @param title  The title of the book to be searched.
+     * @param either Either "in" or "out" as a String.
+     * @return The count of books that meet the search criteria.
+     * @throws SQLException If a SQL error occurs.
      */
     public int searchCollection(String title, String either) throws SQLException {
         String sql;
@@ -391,10 +409,10 @@ public class Library {
 
 
     /**
-     * method: successAlert()
-     * parameters: n/a
-     * return: n/a
-     * purpose: calls the createAndShowAlert method to create a success alert using the message parameter.
+     * Calls the createAndShowAlert method to create a success alert using the message parameter.
+     *
+     * @param message The message to be displayed in the alert.
+     * @throws IOException If an I/O error occurs.
      */
     public void successAlert(String message) throws IOException {
         createAndShowAlert("Success", "fxmlVisuals/success.fxml", message);
@@ -402,10 +420,10 @@ public class Library {
 
 
     /**
-     * method: errorAlert()
-     * parameters: n/a
-     * return: n/a
-     * purpose: calls the createAndShowAlert method to create an error alert using the message parameter.
+     * Calls the createAndShowAlert method to create an error alert using the message parameter.
+     *
+     * @param message The message to be displayed in the alert.
+     * @throws IOException If an I/O error occurs.
      */
     public void errorAlert(String message) throws IOException {
         createAndShowAlert("Error", "fxmlVisuals/error.fxml", message);
@@ -413,10 +431,12 @@ public class Library {
 
 
     /**
-     * method: createAndShowAlert()
-     * parameters: String title, String path
-     * return: n/a
-     * purpose: creates a new error or success alert depending on which method calls it.
+     * Creates a new error or success alert depending on which method calls it.
+     *
+     * @param title   The title of the alert.
+     * @param path    The path to the FXML file for the alert.
+     * @param message The message to be displayed in the alert.
+     * @throws IOException If an I/O error occurs.
      */
     private void createAndShowAlert(String title, String path, String message) throws IOException {
         Stage stage = new Stage();
@@ -439,5 +459,4 @@ public class Library {
         stage.setScene(scene);
         stage.show();
     }
-
 }

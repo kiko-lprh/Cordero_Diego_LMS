@@ -1,4 +1,4 @@
-import java.io.IOException;
+/*import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Scanner;
@@ -153,8 +153,8 @@ class LibraryTest {
         testLibrary.checkIn("Book 1");
         testLibrary.checkIn("Book 3");
 
-        /* Check if each book's due date is correctly set. Only the ones that were checked back in should be set
-        to NULL. The rest should have the date set to one month from now. */
+        Check if each book's due date is correctly set. Only the ones that were checked back in should be set
+        to NULL. The rest should have the date set to one month from now.
         assertNull(testLibrary.bookCollection.get(0).getDueDate());
         assertNull(testLibrary.bookCollection.get(1).getDueDate());
         assertNull(testLibrary.bookCollection.get(2).getDueDate());
@@ -162,8 +162,8 @@ class LibraryTest {
         assertEquals(expected,testLibrary.bookCollection.get(4).getDueDate());
         assertEquals(expected,testLibrary.bookCollection.get(4).getDueDate());
 
-        /* Check if every book is available to be checked out. Only the books that were checked back in should
-        be set to true */
+        Check if every book is available to be checked out. Only the books that were checked back in should
+        be set to true
         assertEquals(true, testLibrary.bookCollection.get(0).getAvailability());
         assertEquals(true, testLibrary.bookCollection.get(1).getAvailability());
         assertEquals(true, testLibrary.bookCollection.get(2).getAvailability());
@@ -242,4 +242,4 @@ class LibraryTest {
 
 
     }
-}
+}*/

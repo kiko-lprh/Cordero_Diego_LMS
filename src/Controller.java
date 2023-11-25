@@ -1,9 +1,11 @@
 /**
- * Diego Cordero
- * CEN 3024 - Software Development 1
- * November 9, 2023.
  * Controller.java
  * This class controls the main buttons, populates the table view and handles text input.
+ *
+ * @author Diego Cordero
+ * @version 1.0 Final
+ * @date November 25, 2023.
+ * @course CEN 3024 - Software Development 1
  */
 
 import javafx.collections.FXCollections;
@@ -32,7 +34,9 @@ import java.sql.Statement;
 import java.util.Date;
 import java.util.Objects;
 
-
+/**
+ * Controls the GUI functions of the LMS.
+ */
 public class Controller {
 
 
@@ -60,6 +64,7 @@ public class Controller {
 
     }
 
+    // FXML Fields
     @FXML
     private TableView<Book> bookTable;
 
@@ -86,10 +91,10 @@ public class Controller {
 
 
     /**
-     * method: checkInButton()
-     * parameters: n/a
-     * return: n/a
-     * purpose: checkIn button action controller. Calls the checkIn(String) method in the Library Class.
+     * checkIn button action controller. Calls the checkIn(String) method in the Library Class.
+     *
+     * @throws IOException  If an I/O error occurs.
+     * @throws SQLException If a SQL error occurs.
      */
     public void checkInButton() throws IOException, SQLException {
         String title = showTitleInputDialog("title");
@@ -101,10 +106,10 @@ public class Controller {
 
 
     /**
-     * method: checkOutButton()
-     * parameters: n/a
-     * return: n/a
-     * purpose: checkOut button action controller. Calls the checkOut(String) method in the Library Class.
+     * checkOut button action controller. Calls the checkOut(String) method in the Library Class.
+     *
+     * @throws IOException  If an I/O error occurs.
+     * @throws SQLException If a SQL error occurs.
      */
     public void checkOutButton() throws IOException, SQLException {
         String title = showTitleInputDialog("title");
@@ -116,10 +121,10 @@ public class Controller {
 
 
     /**
-     * method: removeTitle()
-     * parameters: n/a
-     * return: n/a
-     * purpose: Remove by title button action controller. Calls the removeBook(String) method in the Library Class.
+     * Remove by title button action controller. Calls the removeBook(String) method in the Library Class.
+     *
+     * @throws IOException  If an I/O error occurs.
+     * @throws SQLException If a SQL error occurs.
      */
     public void removeTitle() throws IOException, SQLException {
         String title = showTitleInputDialog("title");
@@ -131,10 +136,10 @@ public class Controller {
 
 
     /**
-     * method: removeBarcode()
-     * parameters: n/a
-     * return: n/a
-     * purpose: Remove by barcode button action controller. Calls the removeBook(int) method in the Library Class.
+     * Remove by barcode button action controller. Calls the removeBook(int) method in the Library Class.
+     *
+     * @throws IOException  If an I/O error occurs.
+     * @throws SQLException If a SQL error occurs.
      */
     public void removeBarcode() throws IOException, SQLException {
         int barcode;
@@ -153,11 +158,11 @@ public class Controller {
 
 
     /**
-     * method: showTitleInputDialog()
-     * parameters: String either
-     * return: String
-     * purpose: Creates an input stage, prompts user to enter a title/barcode into a TextField and then returns
+     * Creates an input stage, prompts the user to enter a title/barcode into a TextField, and then returns
      * the inputted title/barcode.
+     *
+     * @param either Either "barcode" or "title" as a String.
+     * @return The inputted title/barcode as a String.
      */
     private String showTitleInputDialog(String either) {
         try {
@@ -196,10 +201,9 @@ public class Controller {
 
 
     /**
-     * method: populateListView()
-     * parameters: n/a
-     * return: n/a
-     * purpose: populates the table with the contents of the connected database.
+     * Populates the table with the contents of the connected database.
+     *
+     * @throws SQLException If a SQL error occurs.
      */
     public void populateListView() throws SQLException {
 
@@ -225,10 +229,10 @@ public class Controller {
 
 
     /**
-     * method: menuOpenFile()
-     * parameters: n/a
-     * return: n/a
-     * purpose: controls the 'Open File' menu option. Calls the openFile method to open a file.
+     * Controls the 'Open File' menu option. Calls the openFile method to open a file.
+     *
+     * @throws IOException  If an I/O error occurs.
+     * @throws SQLException If a SQL error occurs.
      */
     public void menuOpenFile() throws IOException, SQLException {
         bookstore.openFile();
@@ -237,10 +241,7 @@ public class Controller {
 
 
     /**
-     * method: menuQuitApp()
-     * parameters: n/a
-     * return: n/a
-     * purpose: controls the "Quit" menu option; Closes the app.
+     * Controls the "Quit" menu option; Closes the app.
      */
     public void menuQuitApp() {
         Stage stage = (Stage) mainPane.getScene().getWindow();
@@ -249,10 +250,7 @@ public class Controller {
 
 
     /**
-     * method: openGithub()
-     * parameters: n/a
-     * return: n/a
-     * purpose: controls the 'GitHub' menu option. Tries to open this project's GitHub repo on the PC's default browser.
+     * Controls the 'GitHub' menu option. Tries to open this project's GitHub repo on the PC's default browser.
      */
     public void openGithub() {
         try {

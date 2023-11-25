@@ -1,9 +1,12 @@
 /**
- * Diego Cordero
- * CEN 3024 - Software Development 1
- * November 9, 2023.
  * Main.java
- * This class handles the LMS's GUI and launches the app.
+ * The Main class handles the Library Management System's
+ * GUI and launches the app.
+ *
+ * @author Diego Cordero
+ * @version 1.0 Final
+ * @date November 25, 2023.
+ * @course CEN 3024 - Software Development 1
  */
 
 import javafx.application.Application;
@@ -16,15 +19,15 @@ import javafx.stage.Stage;
 import java.util.Objects;
 
 
-
+/**
+ * The Main class for the LMS.
+ */
 public class Main extends Application {
 
-
     /**
-     * method: start()
-     * parameters: String[] args
-     * return: n/a
-     * purpose: Sets the Main Stage.
+     * Sets the Main Stage.
+     *
+     * @param mainStage The stage that will be set
      */
     public void start(Stage mainStage){
         try{
@@ -34,7 +37,6 @@ public class Main extends Application {
             mainStage.setResizable(false);
             mainStage.getIcons().add(new Image("img/icon.png"));
             mainStage.show();
-
         }
         catch(Exception e){
             e.printStackTrace();
@@ -44,14 +46,12 @@ public class Main extends Application {
 
 
     /**
-     * method: main()
-     * parameters: String[] args
-     * return: n/a
-     * purpose: Launches the app.
+     * Launches the app.
+     *
+     * @param args String[] args.
      */
     public static void main(String[] args) {
         launch(args);
-
     }
 
 
