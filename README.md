@@ -37,3 +37,8 @@ Prints all the books in collection into a table. Displays detailed information a
 
    ```bash
    git clone https://github.com/kiko-lprh/Cordero_Diego_LMS.git
+
+2. **Download the "kkLMS.jar"** Ensure you have Java 8 installed, and run the JAR using the following command:
+
+   ```bash
+   java -jar path/to/LMS.jar
